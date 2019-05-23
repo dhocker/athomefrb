@@ -1,0 +1,13 @@
+secret_key
+*.pyc
+*.rb
+*.log*
+.idea/
+*.sqlite3
+athome-control-frb.conf
+*~
+node_modules/
+app/static/dist/
+export_db.sql
+.DS_Store
+instance/

@@ -1,0 +1,50 @@
+/*
+    Bootstrap overrides for this app
+*/
+
+label {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.dialog-logo {
+    height:auto;
+    width:auto;
+    max-width:50px;
+    max-height:50px;
+}
+
+/*
+    The stock Bootstrap size for a small dialog
+    is just a bit too small for our use.
+*/
+.modal-sm {
+    width: 360px;
+}
+
+/*
+    Button additions
+*/
+.btn-extra {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+/*
+    Smaller sized input text box
+*/
+.textbox-sm {
+    width: 40px;
+    margin-top: 1px;
+}
+
+/*
+For some reason the cursor pointer is lost using react-router-bootstrap
+*/
+.nav-link {
+  cursor: pointer;
+}
+
+.active {
+  font-weight: bold;
+}
