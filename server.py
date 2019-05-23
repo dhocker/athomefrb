@@ -1,5 +1,5 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # AtHome Control
 # Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
