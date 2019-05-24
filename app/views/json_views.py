@@ -40,6 +40,11 @@ def get_device(id):
 
 @app.route("/deviceprograms/<id>", methods=['GET'])
 def get_device_programs(id):
+    """
+    Get all programs for a given device ID
+    :param id:
+    :return:
+    """
     api_req = AHPSRequest()
     res = api_req.get_programs_for_device_id(id)
 
@@ -48,6 +53,19 @@ def get_device_programs(id):
         p["summary"] = build_program_summary(p)
 
     return jsonify({"data": res["programs"]})
+
+
+@app.route("/deviceprogram/<id>", methods=['GET'])
+def get_device_program(id):
+    """
+    Get the device program for progran ID
+    :param id:
+    :return:
+    """
+    api_req = AHPSRequest()
+    res = api_req.get_program_by_id(id)
+
+    return jsonify({"data": res["program"]})
 
 
 @app.route('/devices/<id>/state', methods=['PUT'])
