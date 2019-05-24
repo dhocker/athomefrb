@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import Table from 'react-bootstrap/Table';
 import $ from 'jquery';
 import { DialogBox } from './dialog_box';
+import { OKCancelDialogBox } from './okcancel_dialog_box';
 import { BaseComponent } from './base_component';
 
 /*
@@ -60,7 +61,11 @@ export class BaseTable extends BaseComponent {
               modalTitle: "",
               modalSubtitle: "",
               modalText: "",
-              title: props.title
+              title: props.title,
+              okCancelShow: false,
+              okCancelTitle: "",
+              okCancelSubtitle: "",
+              okCancelText: "",
             },
             ...this.state
         };
@@ -184,6 +189,15 @@ export class BaseTable extends BaseComponent {
                   onHide={this.modalClose}
                 >
                 </DialogBox>
+                <OKCancelDialogBox
+                  title={this.state.okCancelTitle}
+                  subtitle={this.state.okCancelSubtitle}
+                  text={this.state.okCancelText}
+                  show={this.state.okCancelShow}
+                  onOK={this.onRemoveOK}
+                  onCancel={this.onRemoveCancel}
+                >
+                </OKCancelDialogBox>
             </div>
         );
     }
@@ -286,6 +300,15 @@ export class BaseTable extends BaseComponent {
         modalTitle: title,
         modalSubtitle: subtitle,
         modalText: text
+      });
+    }
+
+    showOKCancelDialogBox(title, subtitle, text) {
+      this.setState({
+        okCancelShow: true,
+        okCancelTitle: title,
+        okCancelSubtitle: subtitle,
+        okCancelText: text
       });
     }
 }

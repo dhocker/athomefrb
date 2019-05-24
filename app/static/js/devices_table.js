@@ -34,6 +34,8 @@ export class DevicesTable extends BaseTable {
         this.deviceOn = this.deviceOn.bind(this);
         this.deviceOff = this.deviceOff.bind(this);
         this.deviceRemove = this.onDeviceRemove.bind(this);
+        this.onRemoveOK = this.onRemoveOK.bind(this);
+        this.onRemoveCancel = this.onRemoveCancel.bind(this);
     }
 
     // Override in derived class to provide actions for table row
@@ -45,7 +47,7 @@ export class DevicesTable extends BaseTable {
             <Button className="btn btn-primary btn-sm btn-extra" onClick={this.deviceOff.bind(this, row_index)}>Off</Button>
             <Link to={"/editdevice/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Edit</Link>
             <Link to={"/deviceprograms/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Programs</Link>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
+            <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
     };
@@ -92,8 +94,21 @@ export class DevicesTable extends BaseTable {
 
     // Remove device
     onDeviceRemove(row_index, event) {
+      const rows = this.state.rows;
+      this.remove_row_index = row_index;
+
+      this.setState({
+        okCancelShow: true,
+        okCancelTitle: "Remove Device?",
+        okCancelSubtitle: "",
+        okCancelText: `Confirm removal of device id=${rows[row_index].id} name=${rows[row_index].name}`
+      });
+    };
+
+    onRemoveOK() {
       const $this = this;
       const rows = this.state.rows;
+      const row_index = this.remove_row_index;
       const url = `/devices/${rows[row_index].id}`;
 
       $.ajax({
@@ -110,7 +125,12 @@ export class DevicesTable extends BaseTable {
           $this.showDialogBox("Remove Device", "Error", `${status} ${msg}`);
         }
       });
-    };
+      this.setState({ okCancelShow: false });
+    }
+
+    onRemoveCancel() {
+      this.setState({ okCancelShow: false });
+    }
 
     // change device state
     setDeviceState(row_index, new_state) {
