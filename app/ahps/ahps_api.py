@@ -345,3 +345,15 @@ class AHPSRequest:
         req["args"]["program-id"] = program_id
         response = self.send_command(req)
         return response
+
+    def define_device_program(self, program):
+        req = AHPSRequest.create_request("DefineProgram")
+        req["args"] = program
+        response = self.send_command(req)
+        return response
+
+    def update_device_program(self, program):
+        req = AHPSRequest.create_request("UpdateProgram")
+        req["args"] = program
+        response = self.send_command(req)
+        return response

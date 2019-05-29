@@ -24,6 +24,8 @@ import $ from 'jquery';
 export class DeviceProgramsTable extends BaseTable {
     constructor(props) {
         super(props);
+
+        this.globalActions = this.globalActions.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -63,9 +65,10 @@ export class DeviceProgramsTable extends BaseTable {
     globalActions() {
         // Use Link or button depending on required action
         // This still doesn't work right
+        const { match: { params } } = this.props;
         return (
           <div>
-            <Link to="/newprogram" className="btn btn-primary btn-sm btn-extra" type="button">New Program</Link>
+            <Link to={"/device/" + String(params.id) + "/newprogram"} className="btn btn-primary btn-sm btn-extra" type="button">New Program</Link>
           </div>
         );
     }

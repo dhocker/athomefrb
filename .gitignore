@@ -3,6 +3,7 @@ secret_key
 *.rb
 *.log*
 .idea/
+.vscode/
 *.sqlite3
 athome-control-frb.conf
 *~

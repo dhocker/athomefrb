@@ -20,6 +20,7 @@ import {  Route, Switch } from "react-router-dom";
 import { HomePage } from './home_page';
 import { DeviceProgramsTable } from './device_programs';
 import { DeviceProgram } from './device_program';
+import { NewProgram } from './new_program';
 import About from './about';
 
 export function NotImplemented() {
@@ -50,6 +51,7 @@ function Main() {
         <Route path="/about/" component={About} />
         <Route path="/deviceprograms/:id" component={DeviceProgramsTable} />
         <Route path="/editprogram/:id" component={DeviceProgram} />
+        <Route path="/device/:id/newprogram" component={NewProgram} />
       </Switch>
       <footer className="page-footer font-small blue pt-4">
         <div className="container-fluid text-right">

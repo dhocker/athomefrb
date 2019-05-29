@@ -21,6 +21,8 @@ import $ from 'jquery';
 import { BaseComponent } from './base_component';
 // Reference: https://github.com/wojtekmaj/react-time-picker
 import TimePicker from 'react-time-picker';
+// Reference: https://github.com/udivankin/sunrise-sunset
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
 export class DeviceProgram extends BaseComponent {
     constructor(props) {
@@ -32,18 +34,26 @@ export class DeviceProgram extends BaseComponent {
             name: "",
             deviceid: "",
             daymask: ".......",
-            triggermethod: "clock-time",
+            triggermethod: "none",
             offset: 0,
             randomize: 0,
             randomizeamount: 0,
             dimamount: 0,
             command: "none",
+            args: "",
           },
           days: [0,0,0,0,0,0,0],
-          clocktime: "00:00:00"
+          clocktime: "00:00:00",
+          effectivetime: "00:00:00"
         };
 
+        this.sunrise = Date.now();
+        this.sunset = Date.now();
+
+        this.getSunriseSunset = this.getSunriseSunset.bind(this);
+        this.calculate_effective_time = this.calculate_effective_time.bind(this);
         this.onControlChange = this.onControlChange.bind(this);
+        this.marshalProgram = this.marshalProgram.bind(this);
         this.onSave = this.onSave.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
         this.daysToDaymask = this.daysToDaymask.bind(this);
@@ -54,10 +64,12 @@ export class DeviceProgram extends BaseComponent {
         this.clockTimeControl = this.clockTimeControl.bind(this);
         this.onRandomizeChanged = this.onRandomizeChanged.bind(this);
         this.onClockChange = this.onClockChange.bind(this);
+        this.loadForm = this.loadForm.bind(this);
     }
 
     // This will load the table when the component is mounted
     componentDidMount() {
+        this.getSunriseSunset();
         this.loadForm(this.props.match.params.id);
     }
 
@@ -67,14 +79,69 @@ export class DeviceProgram extends BaseComponent {
         const $this = this;
         const url = `/deviceprogram/${programid}`;
         $.get(url, function (response /* , status */) {
-            const ct = response.data.time.substring(11)
+            // We only want the time portion. This will ignore any date.
+            const ct = response.data.time.substring(response.data.time.length - 8);
             $this.setState({
               program: response.data,
               days: $this.daymaskToDays(response.data.daymask),
               clocktime: ct,
             });
+            $this.calculate_effective_time(parseInt(response.data.offset));
         });
     }
+
+    // Get sunrise/sunset for the configured location
+    getSunriseSunset() {
+        const $this = this;
+        const url = '/location';
+        $.get(url, function (response /* , status */) {
+          const latitude = parseFloat(response.latitude);
+          const longitude = parseFloat(response.longitude);
+          $this.sunrise = getSunrise(latitude, longitude);
+          $this.sunset = getSunset(latitude, longitude);
+          // Calc effective time
+          $this.calculate_effective_time($this.state.program.offset);
+        });
+    }
+
+    calculate_effective_time(offset) {
+        // This is an on-demand calculation because it is extremely
+        // difficult to control the React state offset variable.
+        if (this.state.program.triggermethod === "sunset") {
+            const sunset_offset = new Date(this.sunset.getTime() + offset * 60 * 1000);
+            this.setState({
+              effectivetime: sunset_offset.toLocaleTimeString()
+            });
+        }
+        else if (this.state.program.triggermethod === "sunrise") {
+            const sunrise_offset = new Date(this.sunrise.getTime() + offset * 60 * 1000);
+            this.setState({
+              effectivetime: sunrise_offset.toLocaleTimeString()
+            });
+        }
+        else {
+            // Clock time is a string hh:mm:ss
+            const ctd = this.convert_time(this.state.clocktime);
+            ctd.setMinutes(ctd.getMinutes() + offset);
+            this.setState({
+              effectivetime: ctd.toLocaleTimeString()
+            });
+         }
+    }
+
+    // Convert a time string hh:mm:ss to a Date instance
+    convert_time(timetext) {
+        var pat = /(\d{1,2}):(\d{1,2}):(\d{1,2})/i;
+        var m = pat.exec(timetext);
+        var hr = parseInt(m[1]);
+        var min = parseInt(m[2]);
+        var sec = parseInt(m[3]);
+        const dt = new Date();
+        dt.setHours(hr);
+        dt.setMinutes(min);
+        dt.setSeconds(sec);
+        return dt;
+    };
 
     daymaskToDays(mask) {
       let days = []
@@ -108,7 +175,7 @@ export class DeviceProgram extends BaseComponent {
               <div>
               <TimePicker
                 value={this.state.clocktime}
-                maxDetail="minute"
+                maxDetail="second"
                 format="hh:mm a"
                 onChange={this.onClockChange}
                 disableClock={true}
@@ -128,7 +195,12 @@ export class DeviceProgram extends BaseComponent {
           <>
             <Form.Group controlId="formGroupRandomizeAmount">
               <Form.Label>Randomize Amount</Form.Label>
-              <Form.Control placeholder="Amount" defaultValue={this.state.program.randomizeamount}/>
+              <Form.Control
+                name="randomizeamount"
+                placeholder="Amount"
+                value={this.state.program.randomizeamount}
+                onChange={this.onControlChange}
+              />
             </Form.Group>
           </>
         );
@@ -136,30 +208,53 @@ export class DeviceProgram extends BaseComponent {
       return "";
     }
 
-    onSave() {
+    marshalProgram() {
       // Marshal everything back to a program
       let program = this.state.program;
+      // Date format ISO
+      // This is only the time portion of an ISO datetime
       program.time = this.state.clocktime;
+      // Daymask MTWTFSS
       program.daymask = this.daysToDaymask();
-      this.showMessage("Saved (not implemented)");
+    }
+
+    onSave() {
+      // Marshal everything back to a program
+      this.marshalProgram();
+      // PUT program back to server
+      const url = `/deviceprogram/${this.state.program.id}`;
+      this.saveProgram("PUT", url, this.state.program)
     }
 
     onControlChange(event) {
       let fieldName = event.target.name;
       let fieldVal = event.target.value;
       switch (fieldName) {
-        case "selected":
-          fieldVal = event.target.checked;
+        case "offset":
+          if (fieldVal !== "-" && fieldVal !== "") {
+            fieldVal = parseInt(fieldVal);
+            this.calculate_effective_time(fieldVal);
+          }
+          break;
+        case "randomizeamount":
+          if (fieldVal !== "-" && fieldVal !== "") {
+            fieldVal = parseInt(fieldVal);
+          }
           break;
         default:
           break;
       }
-      this.setState({device: {...this.state.device, [fieldName]: fieldVal}});
+      this.setState({program: {...this.state.program, [fieldName]: fieldVal}});
     }
 
     onActionChanged(event) {
       let command = event.target.name;
-      this.setState({program: {...this.state.program, "command": command}});
+      this.setState({program: {...this.state.program, "command": command}},
+        function() {
+          // After the state is changed...
+          this.calculate_effective_time(this.state.program.offset);
+        }
+      );
     }
 
     onDayCheckChanged(day_index, event) {
@@ -188,7 +283,12 @@ export class DeviceProgram extends BaseComponent {
 
     onTriggerMethodClick(event) {
       let triggerMethod = event.target.name;
-      this.setState({program: {...this.state.program, "triggermethod": triggerMethod}});
+      this.setState({program: {...this.state.program, "triggermethod": triggerMethod}},
+        function() {
+          // After the state is changed...
+          this.calculate_effective_time(this.state.program.offset);
+        }
+      );
     }
 
     onRandomizeChanged(event) {
@@ -200,7 +300,12 @@ export class DeviceProgram extends BaseComponent {
       const newValue = value;
       // There are times when the new clock value is null
       if (newValue) {
-        this.setState({clocktime: newValue});
+        this.setState({clocktime: newValue},
+          function(){
+            // After the state is updated...
+            this.calculate_effective_time(this.state.program.offset);
+          }
+        );
       }
     }
 
@@ -226,8 +331,8 @@ export class DeviceProgram extends BaseComponent {
                   <Form.Label>Action</Form.Label>
                   <DropdownButton id="action" size="sm" title={this.state.program.command}>
                     <Dropdown.Item name="none" onClick={this.onActionChanged}>none</Dropdown.Item>
-                    <Dropdown.Item name="on" onClick={this.onActionChanged}>clock-time</Dropdown.Item>
-                    <Dropdown.Item name="off" onClick={this.onActionChanged}>sunrise</Dropdown.Item>
+                    <Dropdown.Item name="on" onClick={this.onActionChanged}>on</Dropdown.Item>
+                    <Dropdown.Item name="off" onClick={this.onActionChanged}>off</Dropdown.Item>
                   </DropdownButton>
                 </Form.Group>
 
@@ -336,7 +441,14 @@ export class DeviceProgram extends BaseComponent {
 
                         <Form.Group controlId="formGroupOffset">
                           <Form.Label>Offset</Form.Label>
-                          <Form.Control placeholder="Offset" defaultValue={this.state.program.offset}/>
+                          <Form.Control
+                            as="input"
+                            type="text"
+                            name="offset"
+                            placeholder="Offset"
+                            value={String(this.state.program.offset)}
+                            onChange={this.onControlChange}
+                          />
                         </Form.Group>
                         <Form.Group controlId="formGroupRandomize">
                           <div className="checkbox">
@@ -351,6 +463,10 @@ export class DeviceProgram extends BaseComponent {
 
                         {this.randomizeAmountControl()}
 
+                        <Form.Group controlId="formGroupEffectiveTime">
+                          <Form.Label>Effective Time</Form.Label>
+                          <p>{this.state.effectivetime}</p>
+                        </Form.Group>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -359,7 +475,7 @@ export class DeviceProgram extends BaseComponent {
                 <Row>
                   <Col>
                     <ButtonToolbar>
-                      <Button className="btn-extra btn-sm" variant="primary" onClick={this.onSave}>
+                      <Button className="btn-extra-vert btn-sm" variant="primary" onClick={this.onSave}>
                         Save
                       </Button>
                     </ButtonToolbar>

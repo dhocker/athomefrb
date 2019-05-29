@@ -22,6 +22,11 @@ from app import app
 from flask import jsonify, request, make_response
 from app.ahps.ahps_api import AHPSRequest
 from app.ahps.sun_data import get_astral_data
+from configuration import Configuration
+import logging
+
+
+logger = logging.getLogger("app")
 
 
 @app.route("/devices", methods=['GET'])
@@ -36,6 +41,27 @@ def get_device(id):
     api_req = AHPSRequest()
     res = api_req.get_device(id)
     return jsonify({"data": res["device"]})
+
+
+@app.route("/devices/<id>/program", methods=['POST'])
+def create_new_device_program(id):
+    program = {}
+    program["name"] = request.form['name']
+    program["device-id"] = id
+    program["day-mask"] = request.form['daymask']
+    program["trigger-method"] = request.form['triggermethod']
+    program["time"] = request.form['time']
+    program["offset"] = request.form['offset']
+    program["randomize"] = normalize_boolean(request.form["randomize"])
+    program["randomize-amount"] = request.form['randomizeamount']
+    program["command"] = request.form['command']
+    program["dimamount"] = request.form['dimamount']
+    program["args"] = request.form['args']
+
+    api_req = AHPSRequest()
+    res = api_req.define_device_program(program)
+    # return jsonify({"data": res["device"]})
+    return jsonify(res)
 
 
 @app.route("/deviceprograms/<id>", methods=['GET'])
@@ -66,6 +92,37 @@ def get_device_program(id):
     res = api_req.get_program_by_id(id)
 
     return jsonify({"data": res["program"]})
+
+
+@app.route('/deviceprogram/<id>', methods=['PUT'])
+def save_device_program(id):
+    """
+    Save an edited device program
+    :param roomid:
+    :return:
+    """
+    program = {"id": id}
+    program["name"] = request.form['name']
+    program["device-id"] = request.form['deviceid']
+    program["day-mask"] = request.form['daymask']
+    program["trigger-method"] = request.form['triggermethod']
+    program["time"] = request.form['time']
+    program["offset"] = request.form['offset']
+    program["randomize"] = normalize_boolean(request.form["randomize"])
+    program["randomize-amount"] = request.form['randomizeamount']
+    program["command"] = request.form['command']
+    program["dimamount"] = request.form['dimamount']
+    program["args"] = request.form['args']
+
+    api_req = AHPSRequest()
+
+    # TODO Implement update device program API
+    r = api_req.update_device_program(program)
+    # r = {"message": "Not implemented"}
+    logger.debug("Update device program: %s", json.dumps(program, indent=4))
+
+    # We are obligated to send a json response
+    return jsonify(r)
 
 
 @app.route('/devices/<id>/state', methods=['PUT'])
@@ -170,6 +227,19 @@ def delete_device(id):
 
     # We are obligated to send a json response
     return jsonify(r)
+
+
+@app.route('/location', methods=['GET'])
+def get_location():
+    """
+    Returns the location as configured
+    :return:
+    """
+    resp = {
+        "latitude": Configuration.Latitude(),
+        "longitude": Configuration.Longitude()
+    }
+    return jsonify(resp)
 
 
 def build_program_summary(program):

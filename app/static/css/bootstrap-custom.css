@@ -30,6 +30,11 @@ label {
     margin-right: 2px;
 }
 
+.btn-extra-vert {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 /*
     Smaller sized input text box
 */

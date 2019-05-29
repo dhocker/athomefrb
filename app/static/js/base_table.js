@@ -311,6 +311,14 @@ export class BaseTable extends BaseComponent {
         okCancelText: text
       });
     }
+
+    onRemoveCancel() {
+      this.setState({ okCancelShow: false });
+    }
+
+    onRemoveOK() {
+      this.setState({ okCancelShow: false });
+    }
 }
 
 BaseTable.propTypes = {

@@ -39,6 +39,13 @@ export class BaseComponent extends React.Component {
 
         this.generateMessage = this.generateMessage.bind(this);
         this.messageTimerHandler = this.messageTimerHandler.bind(this);
+        this.showMessage = this.showMessage.bind(this);
+        this.generateMessage = this.generateMessage.bind(this);
+        this.showMessage = this.showMessage.bind(this);
+        this.saveDevice = this.saveDevice.bind(this);
+        this.createDevice = this.createDevice.bind(this);
+        this.removeDevice = this.removeDevice.bind(this);
+        this.saveProgram = this.saveProgram.bind(this);
     }
 
     componentWillUnmount() {
@@ -125,6 +132,24 @@ export class BaseComponent extends React.Component {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(data.message);
+        },
+        error: function(xhr, status, msg) {
+          $this.showMessage(`Save failed: ${status} ${msg}`);
+        }
+      });
+    }
+
+    saveProgram(html_method, url, program) {
+      const $this = this;
+
+      $.ajax({
+        method: html_method,
+        url: url,
+        data: program,
+        dataType: "json",
+        success: function(data, status, xhr) {
+          const msg = `${data.message}: Program ID ${data.id} created`;
+          $this.showMessage(msg);
         },
         error: function(xhr, status, msg) {
           $this.showMessage(`Save failed: ${status} ${msg}`);
