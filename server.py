@@ -28,17 +28,25 @@ from app import app
 import configuration
 import Logging
 import logging
+import sys
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger("app")
+    logger.info(sys.version)
 
     try:
-        app.run('0.0.0.0', port=5001, debug=configuration.Configuration.Debug())
-        # app.run('0.0.0.0', port=5000)
+        # app.run('0.0.0.0', port=5001, debug=configuration.Configuration.Debug())
+        # Reference: https://blog.miguelgrinberg.com/post/setting-up-a-flask-application-in-pycharm
+        # Getting debugging to work with Flask. The use_reloader option is problematic.
+        # If you set it to True, Pycharm debugging does not work.
+        app.run('0.0.0.0', port=5001,
+                debug=configuration.Configuration.Debug(),
+                use_debugger=False,
+                use_reloader=False,
+                passthrough_errors=True)
     except Exception as ex:
         print(ex)
-
-    logger = logging.getLogger("app")
 
     logger.info("AtHomeControlFRB ended")
     logger.info("################################################################################")
