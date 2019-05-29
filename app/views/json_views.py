@@ -81,6 +81,21 @@ def get_device_programs(id):
     return jsonify({"data": res["programs"]})
 
 
+@app.route('/deviceprograms/<id>', methods=['DELETE'])
+def delete_device_program(id):
+    """
+    Delete a device program
+    :param id:
+    :return:
+    """
+    api_req = AHPSRequest()
+
+    r = api_req.delete_device_program(id)
+
+    # We are obligated to send a json response
+    return jsonify(r)
+
+
 @app.route("/deviceprogram/<id>", methods=['GET'])
 def get_device_program(id):
     """

@@ -37,6 +37,7 @@ export class BaseComponent extends React.Component {
             messageText: "",
         };
 
+        this.componentWillUnmount = this.componentWillUnmount.bind(this);
         this.generateMessage = this.generateMessage.bind(this);
         this.messageTimerHandler = this.messageTimerHandler.bind(this);
         this.showMessage = this.showMessage.bind(this);

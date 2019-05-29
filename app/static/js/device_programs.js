@@ -19,6 +19,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import $ from 'jquery';
 
 export class DeviceProgramsTable extends BaseTable {
@@ -26,6 +27,9 @@ export class DeviceProgramsTable extends BaseTable {
         super(props);
 
         this.globalActions = this.globalActions.bind(this);
+        this.onProgramRemove = this.onProgramRemove.bind(this);
+        this.onRemoveOK = this.onRemoveOK.bind(this);
+        this.onRemoveCancel = this.onRemoveCancel.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -56,6 +60,7 @@ export class DeviceProgramsTable extends BaseTable {
         return (
           <td>
             <Link to={"/editprogram/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Edit</Link>
+            <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onProgramRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
     };
@@ -71,6 +76,48 @@ export class DeviceProgramsTable extends BaseTable {
             <Link to={"/device/" + String(params.id) + "/newprogram"} className="btn btn-primary btn-sm btn-extra" type="button">New Program</Link>
           </div>
         );
+    }
+
+    // Remove program
+    onProgramRemove(row_index, event) {
+      const rows = this.state.rows;
+      this.remove_row_index = row_index;
+
+      this.setState({
+        okCancelShow: true,
+        okCancelTitle: "Remove Program?",
+        okCancelSubtitle: "",
+        okCancelText: `Confirm removal of program id=${rows[row_index].id} name=${rows[row_index].name}`
+      });
+    };
+
+    onRemoveOK() {
+      const $this = this;
+      const rows = this.state.rows;
+      const row_index = this.remove_row_index;
+      const url = `/deviceprograms/${rows[row_index].id}`;
+
+      $.ajax({
+        method: "DELETE",
+        url: url,
+        data: {},
+        dataType: "json",
+        success: function(data, status, xhr) {
+          $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
+          // Remove device from list
+          const { match: { params } } = $this.props;
+          const url = "/deviceprograms/" + params.id;
+          $this.loadTable(url);
+        },
+        error: function(xhr, status, msg) {
+          $this.showDialogBox("Remove Program", "Error", `${status} ${msg}`);
+        }
+      });
+      this.setState({ okCancelShow: false });
+    }
+
+    onRemoveCancel() {
+      this.setState({ okCancelShow: false });
     }
 }
 
