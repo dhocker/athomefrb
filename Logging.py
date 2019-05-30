@@ -47,6 +47,8 @@ def EnableServerLogging():
     ch.setLevel(loglevel)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(ch)
 
   # Do we log to a file?
   logfile = configuration.Configuration.Logfile()
@@ -57,6 +59,8 @@ def EnableServerLogging():
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     logger.debug("Logging to file: %s", logfile)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(fh)
 
   logger.debug("Logging to console")
 
