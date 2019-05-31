@@ -136,5 +136,8 @@ const programTableColumns = [
 DeviceProgramsTable.defaultProps = {
     cols: programTableColumns,
     title: "Programs",
-    class: "table table-striped table-condensed"
+    class: "table table-striped table-condensed",
+    bordered: true,
+    striped: true,
+    size: "sm"
 };
