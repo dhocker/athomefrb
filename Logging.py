@@ -46,7 +46,7 @@ def EnableServerLogging():
     ch = logging.StreamHandler()
     ch.setLevel(loglevel)
     ch.setFormatter(formatter)
-    logger.addHandler(ch)
+    # logger.addHandler(ch)
     root_logger = logging.getLogger()
     root_logger.addHandler(ch)
 
@@ -57,10 +57,10 @@ def EnableServerLogging():
     fh = logging.handlers.TimedRotatingFileHandler(logfile, when='midnight', backupCount=3)
     fh.setLevel(loglevel)
     fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    logger.debug("Logging to file: %s", logfile)
+    # logger.addHandler(fh)
     root_logger = logging.getLogger()
     root_logger.addHandler(fh)
+    logger.debug("Logging to file: %s", logfile)
 
   logger.debug("Logging to console")
 
