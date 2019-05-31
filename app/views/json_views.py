@@ -268,6 +268,7 @@ def build_program_summary(program):
     sunrise = sun_data["sunrise"]
 
     effective_start_time = "No Time"
+    randomize = ""
     offset = timedelta(minutes=int(program["offset"]))
     if program["triggermethod"] == "sunset":
         effective_start_time = (sunset + offset).strftime("%I:%M%p")
@@ -277,13 +278,16 @@ def build_program_summary(program):
         st = program["time"]
         start_time = datetime.strptime(program["time"], "%Y-%m-%d %H:%M:%S")
         effective_start_time = (start_time + offset).strftime("%I:%M%p")
+        if program["randomize"]:
+            randomize = "Randomize={0}".format(program["randomizeamount"])
     else:
         effective_start_time = "No Time"
 
-    start = "{0} Method={1} Offset={2} EffectiveTime={3} Action={4}".format(
+    start = "{0} Method={1} Offset={2} {3} EffectiveTime={4} Action={5}".format(
         program["daymask"],
         program["triggermethod"],
         program["offset"],
+        randomize,
         effective_start_time, program["command"])
     return start
 
