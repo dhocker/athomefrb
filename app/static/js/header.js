@@ -36,9 +36,6 @@ function Header() {
           <LinkContainer to="/about" className="nav-link">
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>
-          <LinkContainer to="/notimplemented" className="nav-link">
-            <NavItem className="nav-item">Not Implemented</NavItem>
-          </LinkContainer>
         </Nav>
       </Navbar>
     </header>
