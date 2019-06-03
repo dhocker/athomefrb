@@ -47,8 +47,15 @@ export class EditDeviceForm extends BaseComponent {
     loadForm(deviceid) {
         const $this = this;
         const url = `/devices/${deviceid}`;
-        $.get(url, function (response /* , status */) {
-            $this.setState({device: response.data});
+        $.ajax({
+          url: url,
+          success: function (response /* , status */) {
+              $this.setState({device: response.data});
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            $this.showMessage(`${status}, ${msg}, ${response.message}`);
+          }
         });
     }
 

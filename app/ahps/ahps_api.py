@@ -31,8 +31,22 @@ class AHPSRequest:
         :param host:
         :param port:
         """
-        self.host = host
-        self.port = port
+        self._host = host
+        self._port = port
+        # The error response from the last request
+        self._last_error_msg = None
+        # The successful response from the last request
+        self._last_response = None
+
+
+    @property
+    def last_error(self):
+        return self._last_error_msg
+
+
+    @property
+    def last_response(self):
+        return self._last_response
 
 
     @staticmethod
@@ -66,13 +80,13 @@ class AHPSRequest:
 
         try:
             # Connect to server and check status
-            sock.connect((self.host, self.port))
-            return sock
+            sock.connect((self._host, self._port))
         except Exception as ex:
-            logger.error("Unable to connect to server: %s %d", self.host, self.port)
+            logger.error("Unable to connect to server: %s %d", self._host, self._port)
             logger.error(str(ex))
+            raise ex
 
-        return None
+        return sock
 
 
     @staticmethod
@@ -121,30 +135,34 @@ class AHPSRequest:
         :param data:
         :return:
         """
+        self._last_error_msg = None
+
         # Convert the payload structure into json text.
         # Effectively this serializes the payload.
-        #print "raw json:", data
+        # print "raw json:", data
         json_data = json.JSONEncoder().encode(data)
 
-        # Create a socket connection to the server
-        sock = self.connect_to_server()
-        if sock is None:
-            return None
-
         # send status request to server
+        sock = None
         try:
+            # Create a socket connection to the server
+            sock = self.connect_to_server()
+
             logger.debug("Sending request: %s", json_data)
             sock.sendall(json_data.encode())
 
             # Receive data from the server and shut down
             json_data = AHPSRequest.read_json(sock)
+            self._last_response = json.loads(json_data)["X10Response"]
         except Exception as ex:
             logger.error(str(ex))
-            json_data = None
+            self._last_error_msg = {"message": str(ex)}
+            self._last_response = None
         finally:
-            sock.close()
+            if sock:
+                sock.close()
 
-        return json.loads(json_data)["X10Response"]
+        return self.last_response
 
     # TODO Replace address and house code with device-id
 

@@ -98,7 +98,8 @@ export class BaseComponent extends React.Component {
           $this.showMessage(data.message);
         },
         error: function(xhr, status, msg) {
-          $this.showMessage(`Save failed: ${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
         }
       });
     }
@@ -117,7 +118,8 @@ export class BaseComponent extends React.Component {
           $this.showMessage(msg);
         },
         error: function(xhr, status, msg) {
-          $this.showMessage(`Create failed: ${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showMessage(`Create failed: ${status} ${msg} ${response}`);
         }
       });
     }
@@ -135,7 +137,8 @@ export class BaseComponent extends React.Component {
           $this.showMessage(data.message);
         },
         error: function(xhr, status, msg) {
-          $this.showMessage(`Save failed: ${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
         }
       });
     }
@@ -149,11 +152,18 @@ export class BaseComponent extends React.Component {
         data: program,
         dataType: "json",
         success: function(data, status, xhr) {
-          const msg = `${data.message}: Program ID ${data.id} created`;
+          var msg;
+          if (html_method === "PUT") {
+            msg = `${data.message}: Program ID ${program.id} updated`;
+          }
+          else {
+            msg = `${data.message}: Program ${data.id} created`;
+          }
           $this.showMessage(msg);
         },
         error: function(xhr, status, msg) {
-          $this.showMessage(`Save failed: ${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
         }
       });
     }

@@ -94,7 +94,10 @@ export class BaseTable extends BaseComponent {
     loadTable(url) {
         console.log("Getting all records from url " + url);
         const $this = this;
-        $.get(url, function (response /* , status */) {
+        $.ajax({
+          url: url,
+          method: "GET",
+          success: function (response /* , status */) {
             console.log("Data rows received: " + String(response.data.length));
             const rows = response.data;
             // Repeat the last sort
@@ -105,6 +108,11 @@ export class BaseTable extends BaseComponent {
                 $this.sortRows(rows, $this.sort_col, $this.sort_dir[$this.sort_col] * SORT_INVERT);
             }
             $this.setState({rows: rows});
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            $this.showDialogBox(msg, status, response.message);
+          }
         });
     }
 
@@ -128,8 +136,8 @@ export class BaseTable extends BaseComponent {
                 $this.setState({rows: response.data});
             },
             error: (xhr, status, err) => {
-                console.error("AJAX search call failed");
-                console.error(url, status, err.toString());
+                const response = JSON.parse(xhr.responseText);
+                $this.showDialogBox(err, status, response.message);
             },
         });
     }

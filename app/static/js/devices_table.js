@@ -122,7 +122,8 @@ export class DevicesTable extends BaseTable {
           $this.loadTable($this.props.url);
         },
         error: function(xhr, status, msg) {
-          $this.showDialogBox("Remove Device", "Error", `${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox("Remove Device", status, `${msg} ${response}`);
         }
       });
       this.setState({ okCancelShow: false });
@@ -147,7 +148,8 @@ export class DevicesTable extends BaseTable {
           $this.showMessage(`Device ${rows[row_index]["name"]} turned ${new_state}`);
         },
         error: function(xhr, status, msg) {
-          $this.showDialogBox("Device " + new_state, "Error", `${status} ${msg}`)
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox("Device " + new_state, status, `${msg} ${response}`)
         }
       });
     }

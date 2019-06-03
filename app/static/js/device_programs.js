@@ -46,11 +46,19 @@ export class DeviceProgramsTable extends BaseTable {
     getDeviceInfo(device_id) {
         const notThis = this;
         const url = "/devices/" + String(device_id);
-        $.get(url, function (response /* , status */) {
+        $.ajax({
+          method: "GET",
+          url: url,
+          success: function (response /* , status */) {
             const deviceInfo = response.data;
             notThis.setState({
               title: `${notThis.props.title} for Device ${deviceInfo.name} at ${deviceInfo.location}`
             });
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            notThis.showDialogBox(msg, status, response.message);
+          }
         });
     }
 
@@ -110,7 +118,8 @@ export class DeviceProgramsTable extends BaseTable {
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {
-          $this.showDialogBox("Remove Program", "Error", `${status} ${msg}`);
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox("Remove Program", status, `${msg} ${response}`);
         }
       });
       this.setState({ okCancelShow: false });

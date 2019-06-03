@@ -33,14 +33,22 @@ logger = logging.getLogger("app")
 def get_devices():
     api_req = AHPSRequest()
     res = api_req.get_all_devices()
-    return jsonify({"data": res["devices"]})
+    if res:
+        return jsonify({"data": res["devices"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route("/devices/<id>", methods=['GET'])
 def get_device(id):
     api_req = AHPSRequest()
     res = api_req.get_device(id)
-    return jsonify({"data": res["device"]})
+    if res:
+        return jsonify({"data": res["device"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route("/devices/<id>/program", methods=['POST'])
@@ -60,8 +68,11 @@ def create_new_device_program(id):
 
     api_req = AHPSRequest()
     res = api_req.define_device_program(program)
-    # return jsonify({"data": res["device"]})
-    return jsonify(res)
+    if res:
+        return jsonify(res)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route("/deviceprograms/<id>", methods=['GET'])
@@ -75,10 +86,14 @@ def get_device_programs(id):
     res = api_req.get_programs_for_device_id(id)
 
     # Build response with program summary
-    for p in res["programs"]:
-        p["summary"] = build_program_summary(p)
+    if res:
+        for p in res["programs"]:
+            p["summary"] = build_program_summary(p)
 
-    return jsonify({"data": res["programs"]})
+        return jsonify({"data": res["programs"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/deviceprograms/<id>', methods=['DELETE'])
@@ -93,7 +108,11 @@ def delete_device_program(id):
     r = api_req.delete_device_program(id)
 
     # We are obligated to send a json response
-    return jsonify(r)
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route("/deviceprogram/<id>", methods=['GET'])
@@ -106,7 +125,11 @@ def get_device_program(id):
     api_req = AHPSRequest()
     res = api_req.get_program_by_id(id)
 
-    return jsonify({"data": res["program"]})
+    if res:
+        return jsonify({"data": res["program"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/deviceprogram/<id>', methods=['PUT'])
@@ -133,11 +156,14 @@ def save_device_program(id):
 
     # TODO Implement update device program API
     r = api_req.update_device_program(program)
-    # r = {"message": "Not implemented"}
-    logger.debug("Update device program: %s", json.dumps(program, indent=4))
+    if r:
+        logger.debug("Update device program: %s", json.dumps(program, indent=4))
 
-    # We are obligated to send a json response
-    return jsonify(r)
+        # We are obligated to send a json response
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/devices/<id>/state', methods=['PUT'])
@@ -155,27 +181,21 @@ def set_devices_state(id):
     arg = request.form['state']
     api_req = AHPSRequest()
     if arg == "on":
-        if api_req.device_on(id, 0):
-            # Return success
-            pass
-        else:
-            # Return error
-            pass
+        res = api_req.device_on(id, 0)
     elif arg == "off":
-        if api_req.device_off(id, 0):
-            # Return success
-            pass
-        else:
-            # Return error
-            pass
+        res = api_req.device_off(id, 0)
     else:
         # Return an error
-        pass
+        res = None
 
     # We are obligated to send a json response
-    resp = make_response("{}")
-    resp.status_code = 200
-    return resp
+    if res:
+        resp = jsonify(res)
+        resp.status_code = 200
+        return resp
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/devices/<id>', methods=['PUT'])
@@ -200,7 +220,11 @@ def save_device(id):
     r = api_req.update_device(id, name, location, device_type, address, selected)
 
     # We are obligated to send a json response
-    return jsonify(r)
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/devices', methods=['POST'])
@@ -225,7 +249,11 @@ def define_device():
     r = api_req.define_device(name, location, device_type, address, selected)
 
     # We are obligated to send a json response
-    return jsonify(r)
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/devices/<id>', methods=['DELETE'])
@@ -241,7 +269,11 @@ def delete_device(id):
     # r = {"message": "Success"}
 
     # We are obligated to send a json response
-    return jsonify(r)
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
 
 
 @app.route('/location', methods=['GET'])
