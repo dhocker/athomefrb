@@ -28,8 +28,8 @@ export class DeviceProgramsTable extends BaseTable {
 
         this.globalActions = this.globalActions.bind(this);
         this.onProgramRemove = this.onProgramRemove.bind(this);
-        this.onRemoveOK = this.onRemoveOK.bind(this);
-        this.onRemoveCancel = this.onRemoveCancel.bind(this);
+        this.onDialogOK = this.onDialogOK.bind(this);
+        this.onDialogCancel = this.onDialogCancel.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -99,7 +99,7 @@ export class DeviceProgramsTable extends BaseTable {
       });
     };
 
-    onRemoveOK() {
+    onDialogOK() {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
@@ -125,7 +125,7 @@ export class DeviceProgramsTable extends BaseTable {
       this.setState({ okCancelShow: false });
     }
 
-    onRemoveCancel() {
+    onDialogCancel() {
       this.setState({ okCancelShow: false });
     }
 }

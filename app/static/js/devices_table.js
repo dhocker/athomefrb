@@ -34,8 +34,8 @@ export class DevicesTable extends BaseTable {
         this.deviceOn = this.deviceOn.bind(this);
         this.deviceOff = this.deviceOff.bind(this);
         this.deviceRemove = this.onDeviceRemove.bind(this);
-        this.onRemoveOK = this.onRemoveOK.bind(this);
-        this.onRemoveCancel = this.onRemoveCancel.bind(this);
+        this.onDialogOK = this.onDialogOK.bind(this);
+        this.onDialogCancel = this.onDialogCancel.bind(this);
     }
 
     // Override in derived class to provide actions for table row
@@ -105,7 +105,7 @@ export class DevicesTable extends BaseTable {
       });
     };
 
-    onRemoveOK() {
+    onDialogOK() {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
@@ -129,7 +129,7 @@ export class DevicesTable extends BaseTable {
       this.setState({ okCancelShow: false });
     }
 
-    onRemoveCancel() {
+    onDialogCancel() {
       this.setState({ okCancelShow: false });
     }
 

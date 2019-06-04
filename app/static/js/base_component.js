@@ -17,6 +17,8 @@
 
 import React from 'react';
 import $ from 'jquery';
+import { DialogBox } from './dialog_box';
+import { OKCancelDialogBox } from './okcancel_dialog_box';
 
 /*
   The BaseComponent contains methods and functions that are
@@ -47,6 +49,8 @@ export class BaseComponent extends React.Component {
         this.createDevice = this.createDevice.bind(this);
         this.removeDevice = this.removeDevice.bind(this);
         this.saveProgram = this.saveProgram.bind(this);
+        this.renderDialogBox = this.renderDialogBox.bind(this);
+        this.renderOKCancelDialogBox = this.renderOKCancelDialogBox.bind(this);
     }
 
     componentWillUnmount() {
@@ -166,6 +170,63 @@ export class BaseComponent extends React.Component {
           $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
         }
       });
+    }
+
+    renderDialogBox() {
+      return (
+        <DialogBox
+          title={this.state.modalTitle}
+          subtitle={this.state.modalSubtitle}
+          text={this.state.modalText}
+          show={this.state.modalShow}
+          onHide={this.modalClose}
+        >
+        </DialogBox>
+      );
+    }
+
+    renderOKCancelDialogBox() {
+      return (
+        <OKCancelDialogBox
+          title={this.state.okCancelTitle}
+          subtitle={this.state.okCancelSubtitle}
+          text={this.state.okCancelText}
+          show={this.state.okCancelShow}
+          onOK={this.onDialogOK}
+          onCancel={this.onDialogCancel}
+        >
+        </OKCancelDialogBox>
+      );
+    }
+
+    modalClose() {
+      this.setState({ modalShow: false });
+    }
+
+    showDialogBox(title, subtitle, text) {
+      this.setState({
+        modalShow: true,
+        modalTitle: title,
+        modalSubtitle: subtitle,
+        modalText: text
+      });
+    }
+
+    showOKCancelDialogBox(title, subtitle, text) {
+      this.setState({
+        okCancelShow: true,
+        okCancelTitle: title,
+        okCancelSubtitle: subtitle,
+        okCancelText: text
+      });
+    }
+
+    onDialogCancel() {
+      this.setState({ okCancelShow: false });
+    }
+
+    onDialogOK() {
+      this.setState({ okCancelShow: false });
     }
 }
 
