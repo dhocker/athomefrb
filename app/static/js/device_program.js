@@ -29,22 +29,29 @@ export class DeviceProgram extends BaseComponent {
         super(props);
 
         this.state = {
-          program: {
-            id: "",
-            name: "",
-            deviceid: "",
-            daymask: ".......",
-            triggermethod: "none",
-            offset: 0,
-            randomize: 0,
-            randomizeamount: 0,
-            dimamount: 0,
-            command: "none",
-            args: "",
-          },
-          days: [0,0,0,0,0,0,0],
-          clocktime: "00:00:00",
-          effectivetime: "00:00:00"
+          ...this.state,
+          ...{
+            program: {
+              id: "",
+              name: "",
+              deviceid: "",
+              daymask: ".......",
+              triggermethod: "none",
+              offset: 0,
+              randomize: 0,
+              randomizeamount: 0,
+              dimamount: 0,
+              command: "none",
+              args: "",
+            },
+            days: [0,0,0,0,0,0,0],
+            clocktime: "00:00:00",
+            effectivetime: "00:00:00",
+            modalShow: false,
+            modalTitle: "",
+            modalSubtitle: "",
+            modalText: "",
+          }
         };
 
         this.sunrise = Date.now();
@@ -65,6 +72,7 @@ export class DeviceProgram extends BaseComponent {
         this.onRandomizeChanged = this.onRandomizeChanged.bind(this);
         this.onClockChange = this.onClockChange.bind(this);
         this.loadForm = this.loadForm.bind(this);
+        this.modalClose = this.modalClose.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -309,6 +317,16 @@ export class DeviceProgram extends BaseComponent {
       }
     }
 
+    modalClose() {
+      // When the saved confirmation is dismissed, go back to the previous URI
+      if (!this.save_error) {
+        this.props.history.goBack();
+      }
+      else {
+        this.setState({ modalShow: false });
+      }
+    }
+
     render() {
         return (
             <>
@@ -482,6 +500,7 @@ export class DeviceProgram extends BaseComponent {
                   </Col>
                 </Row>
               </Form>
+              {this.renderDialogBox()}
             </>
         );
     }

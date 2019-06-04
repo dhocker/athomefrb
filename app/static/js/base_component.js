@@ -32,12 +32,8 @@ export class BaseComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.messageTimer = null
-
-        // Initial state with empty rows
-        this.state = {
-            messageText: "",
-        };
+        this.messageTimer = null;
+        this.save_error = false;
 
         this.componentWillUnmount = this.componentWillUnmount.bind(this);
         this.generateMessage = this.generateMessage.bind(this);
@@ -51,6 +47,22 @@ export class BaseComponent extends React.Component {
         this.saveProgram = this.saveProgram.bind(this);
         this.renderDialogBox = this.renderDialogBox.bind(this);
         this.renderOKCancelDialogBox = this.renderOKCancelDialogBox.bind(this);
+        this.modalClose = this.modalClose.bind(this);
+
+        // Initial state with empty rows
+        this.state = {
+            messageText: "",
+            modalShow: false,
+            modalTitle: "",
+            modalSubtitle: "",
+            modalText: "",
+            modalDialogBoxClose: this.modalClose,
+            title: props.title,
+            okCancelShow: false,
+            okCancelTitle: "",
+            okCancelSubtitle: "",
+            okCancelText: "",
+        };
     }
 
     componentWillUnmount() {
@@ -156,18 +168,18 @@ export class BaseComponent extends React.Component {
         data: program,
         dataType: "json",
         success: function(data, status, xhr) {
-          var msg;
+          $this.save_error = false;
           if (html_method === "PUT") {
-            msg = `${data.message}: Program ID ${program.id} updated`;
+            $this.showDialogBox("Record Updated", data.message, `Program ID ${program.id} updated`);
           }
           else {
-            msg = `${data.message}: Program ${data.id} created`;
+            $this.showDialogBox("Record Created", data.message, `Program ID ${program.id} created`);
           }
-          $this.showMessage(msg);
         },
         error: function(xhr, status, msg) {
           const response = JSON.parse(xhr.responseText);
-          $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
+          $this.save_error = true;
+          $this.showDialogBox("Unable to Save Record", status, `${msg} ${response.message}`);
         }
       });
     }
@@ -179,7 +191,7 @@ export class BaseComponent extends React.Component {
           subtitle={this.state.modalSubtitle}
           text={this.state.modalText}
           show={this.state.modalShow}
-          onHide={this.modalClose}
+          onHide={this.state.modalDialogBoxClose}
         >
         </DialogBox>
       );
@@ -204,21 +216,23 @@ export class BaseComponent extends React.Component {
     }
 
     showDialogBox(title, subtitle, text) {
-      this.setState({
+      const new_state = {
         modalShow: true,
         modalTitle: title,
         modalSubtitle: subtitle,
         modalText: text
-      });
+      };
+      this.setState({...this.state, ...new_state});
     }
 
     showOKCancelDialogBox(title, subtitle, text) {
-      this.setState({
+      const new_state = {
         okCancelShow: true,
         okCancelTitle: title,
         okCancelSubtitle: subtitle,
         okCancelText: text
-      });
+      };
+      this.setState({...this.state, ...new_state});
     }
 
     onDialogCancel() {

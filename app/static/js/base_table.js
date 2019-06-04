@@ -54,16 +54,7 @@ export class BaseTable extends BaseComponent {
         // Initial state with empty rows. The base class creates state.
         this.state = {
             ...{
-              rows: [],
-              modalShow: false,
-              modalTitle: "",
-              modalSubtitle: "",
-              modalText: "",
-              title: props.title,
-              okCancelShow: false,
-              okCancelTitle: "",
-              okCancelSubtitle: "",
-              okCancelText: "",
+              rows: []
             },
             ...this.state
         };
