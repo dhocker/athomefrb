@@ -81,7 +81,7 @@ export class DeviceProgramsTable extends BaseTable {
         const { match: { params } } = this.props;
         return (
           <div>
-            <Link to={"/device/" + String(params.id) + "/newprogram"} className="btn btn-primary btn-sm btn-extra" type="button">New Program</Link>
+            <Link to={"/device/" + String(params.id) + "/newprogram"} className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button">New Program</Link>
           </div>
         );
     }
