@@ -16,6 +16,25 @@
 # along with this program (the LICENSE file).  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+How to send JSON from Javascript jQuery
+
+  $.ajax({
+    method: "PUT", // or POST
+    url: url,
+    data: JSON.stringify(this.state.rows), // Whatever data you want to send to server
+    dataType: "json", // content type being received
+    contentType: "application/json", // content type being sent
+    processData: false,
+    success: function(data, status, xhr) {
+        // Handle success
+    },
+    error: function(xhr, status, msg) {
+        // Handle error
+    }
+  });
+"""
+
 from datetime import timedelta, datetime
 import json
 from app import app
@@ -227,10 +246,39 @@ def save_device(id):
     return response
 
 
+@app.route('/devices', methods=['PUT'])
+def save_all_devices():
+    """
+    Save all device definitions
+    :return:
+    """
+    devices = request.get_json()
+    api_req = AHPSRequest()
+
+    for device in devices:
+        r = api_req.update_device(device["id"],
+                                  device["name"],
+                                  device["location"],
+                                  device["type"],
+                                  device["address"],
+                                  normalize_boolean(device["selected"]))
+        if not r:
+            response = jsonify(api_req.last_error)
+            response.status_code = 500
+            return response
+
+    # We are obligated to send a json response
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/devices', methods=['POST'])
 def define_device():
     """
-    Save an edited device definition
+    Save an new device definition
     :param roomid:
     :return:
     """
@@ -331,6 +379,10 @@ def normalize_boolean(str_value):
     :return: True or False
     """
     v = False
-    if str_value.lower() == "true":
-        v = True
+    if isinstance(str_value, int):
+        v = not not str_value
+    elif isinstance(str_value, str):
+        v = str_value.lower() == "true"
+    elif isinstance(str_value, bool):
+        v = str_value
     return v

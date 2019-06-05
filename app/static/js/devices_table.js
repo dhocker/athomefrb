@@ -69,7 +69,27 @@ export class DevicesTable extends BaseTable {
 
     // Save the selected property of all devices
     saveSelected(event) {
-      this.showDialogBox("Device Selections Saved", "Success", "The selected device settings have been saved");
+      // this.showDialogBox("Device Selections Saved", "Success", "The selected device settings have been saved");
+      const url = '/devices';
+      const $this = this;
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: JSON.stringify(this.state.rows),
+        dataType: "json",
+        contentType: "application/json",
+        processData: false,
+        success: function(data, status, xhr) {
+          $this.save_error = false;
+          $this.showDialogBox("Save Selected Settings", data.message, "All Device Records Updated");
+        },
+        error: function(xhr, status, msg) {
+          $this.save_error = true;
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox("Unable to Save Device Records", status, `${msg} ${response.message}`);
+        }
+      });
     };
 
     // All selected on
