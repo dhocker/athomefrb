@@ -26,14 +26,22 @@ export class EditDeviceForm extends BaseComponent {
         super(props);
 
         this.state = {
-          device: {
-            type: "x10"
+          ...this.state,
+          ...{
+            device: {
+              type: "x10",
+            },
+            modalShow: false,
+            modalTitle: "",
+            modalSubtitle: "",
+            modalText: "",
           }
         };
 
         this.onControlChange = this.onControlChange.bind(this);
         this.onDeviceTypeClick = this.onDeviceTypeClick.bind(this);
         this.onSave = this.onSave.bind(this);
+        this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
     }
 
@@ -84,6 +92,16 @@ export class EditDeviceForm extends BaseComponent {
       }
       else {
         this.saveDevice(this.state.device);
+      }
+    }
+
+    modalClose() {
+      // When the saved confirmation is dismissed, go back to the previous URI
+      if (!this.save_error) {
+        this.props.history.goBack();
+      }
+      else {
+        this.setState({ modalShow: false });
       }
     }
 
@@ -178,6 +196,7 @@ export class EditDeviceForm extends BaseComponent {
               Save
             </Button>
           </Form>
+          {this.renderDialogBox()}
         </>
       );
     };

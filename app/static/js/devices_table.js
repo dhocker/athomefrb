@@ -59,10 +59,10 @@ export class DevicesTable extends BaseTable {
         // This still doesn't work right
         return (
           <div>
-            <Link to="/newdevice" className="btn btn-primary btn-sm btn-extra" type="button">New Device</Link>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.saveSelected.bind(this)} type="button">Save Selected</Button>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.selectedOn.bind(this)} type="button">All Selected On</Button>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.selectedOff.bind(this)} type="button">All Selected Off</Button>
+            <Link to="/newdevice" className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button">New Device</Link>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.saveSelected.bind(this)} type="button">Save Selected</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOn.bind(this)} type="button">All Selected On</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOff.bind(this)} type="button">All Selected Off</Button>
           </div>
         );
     }

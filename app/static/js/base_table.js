@@ -167,6 +167,7 @@ export class BaseTable extends BaseComponent {
                     {this.generateMessage()}
                 </div>
                 <div className="panel-body">
+                    {GlobalComponents}
                     <Table
                       striped={this.props.striped}
                       bordered={this.props.bordered}

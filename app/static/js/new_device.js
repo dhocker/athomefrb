@@ -24,12 +24,19 @@ export class NewDevice extends EditDeviceForm {
         super(props);
 
         this.state = {
-          device: {
-            name: "",
-            location: "",
-            type: "x10",
-            address: "",
-            selected: false
+          ...this.state,
+          ...{
+            device: {
+              name: "",
+              location: "",
+              type: "x10",
+              address: "",
+              selected: false
+            },
+            modalShow: false,
+            modalTitle: "",
+            modalSubtitle: "",
+            modalText: "",
           }
         };
 

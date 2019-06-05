@@ -111,11 +111,15 @@ export class BaseComponent extends React.Component {
         data: device,
         dataType: "json",
         success: function(data, status, xhr) {
-          $this.showMessage(data.message);
+          // $this.showMessage(data.message);
+          $this.save_error = false;
+          $this.showDialogBox("Device Record Updated", data.message, `Device ID ${device.id} updated`);
         },
         error: function(xhr, status, msg) {
+          $this.save_error = true;
           const response = JSON.parse(xhr.responseText);
-          $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
+          // $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
+          $this.showDialogBox("Unable to Save Device Record", status, `${msg} ${response.message}`);
         }
       });
     }
@@ -130,12 +134,16 @@ export class BaseComponent extends React.Component {
         data: device,
         dataType: "json",
         success: function(data, status, xhr) {
-          const msg = `${data.message}: Device ID ${data['device-id']} created`
-          $this.showMessage(msg);
+          const msg = `Device ID ${data['device-id']} created`;
+          // $this.showMessage(msg);
+          $this.save_error = false;
+          $this.showDialogBox("Device Record Created", data.message, msg);
         },
         error: function(xhr, status, msg) {
+          $this.save_error = true;
           const response = JSON.parse(xhr.responseText);
-          $this.showMessage(`Create failed: ${status} ${msg} ${response}`);
+          // $this.showMessage(`Create failed: ${status} ${msg} ${response}`);
+          $this.showDialogBox("Unable to Save Device Record", status, `${msg} ${response.message}`);
         }
       });
     }
@@ -215,12 +223,13 @@ export class BaseComponent extends React.Component {
       this.setState({ modalShow: false });
     }
 
-    showDialogBox(title, subtitle, text) {
+    showDialogBox(title, subtitle, text, close=this.modalClose) {
       const new_state = {
         modalShow: true,
         modalTitle: title,
         modalSubtitle: subtitle,
-        modalText: text
+        modalText: text,
+        modalDialogBoxClose: close
       };
       this.setState({...this.state, ...new_state});
     }
