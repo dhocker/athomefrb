@@ -110,6 +110,12 @@ export class EditDeviceForm extends BaseComponent {
     }
 
     validate(device) {
+      if (!device.name) {
+        return "Name is required";
+      }
+      if (!device.location) {
+        return "Location is required";
+      }
       const addr = device.address.toLowerCase();
       switch (device.type) {
         case "x10":
