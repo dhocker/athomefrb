@@ -70,7 +70,7 @@ def get_device(id):
     return response
 
 
-@app.route("/devices/<id>/program", methods=['POST'])
+@app.route("/devices/<id>/programs", methods=['POST'])
 def create_new_device_program(id):
     program = {}
     program["name"] = request.form['name']
@@ -94,7 +94,7 @@ def create_new_device_program(id):
     return response
 
 
-@app.route("/deviceprograms/<id>", methods=['GET'])
+@app.route("/devices/<id>/programs", methods=['GET'])
 def get_device_programs(id):
     """
     Get all programs for a given device ID
@@ -115,7 +115,7 @@ def get_device_programs(id):
     return response
 
 
-@app.route('/deviceprograms/<id>', methods=['DELETE'])
+@app.route('/programs/<id>', methods=['DELETE'])
 def delete_device_program(id):
     """
     Delete a device program
@@ -134,7 +134,7 @@ def delete_device_program(id):
     return response
 
 
-@app.route("/deviceprogram/<id>", methods=['GET'])
+@app.route("/programs/<id>", methods=['GET'])
 def get_device_program(id):
     """
     Get the device program for progran ID
@@ -151,7 +151,7 @@ def get_device_program(id):
     return response
 
 
-@app.route('/deviceprogram/<id>', methods=['PUT'])
+@app.route('/programs/<id>', methods=['PUT'])
 def save_device_program(id):
     """
     Save an edited device program
@@ -210,8 +210,12 @@ def set_devices_state(id):
     # We are obligated to send a json response
     if res:
         resp = jsonify(res)
-        resp.status_code = 200
+        if res["result-code"]:
+            resp.status_code = 500
+        else:
+            resp.status_code = 200
         return resp
+
     response = jsonify(api_req.last_error)
     response.status_code = 500
     return response

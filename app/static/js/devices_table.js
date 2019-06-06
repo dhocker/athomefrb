@@ -169,7 +169,7 @@ export class DevicesTable extends BaseTable {
         },
         error: function(xhr, status, msg) {
           const response = JSON.parse(xhr.responseText);
-          $this.showDialogBox("Device " + new_state, status, `${msg} ${response}`)
+          $this.showDialogBox(`Device ${rows[row_index]["name"]} ${new_state}`, msg, response.message)
         }
       });
     }

@@ -43,7 +43,7 @@ export class NewProgram extends DeviceProgram {
       this.marshalProgram();
       // POST program back to server
       const { match: { params } } = this.props;
-      const url = `/devices/${params.id}/program`;
+      const url = `/devices/${params.id}/programs`;
       this.saveProgram("POST", url, this.state.program)
     }
 }

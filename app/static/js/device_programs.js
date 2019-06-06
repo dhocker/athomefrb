@@ -35,7 +35,8 @@ export class DeviceProgramsTable extends BaseTable {
     // This will load the table when the component is mounted
     componentDidMount() {
         const { match: { params } } = this.props;
-        const url = "/deviceprograms/" + params.id;
+        // all programs for a device
+        const url = `/devices/${params.id}/programs`;
         this.setState({
           title: `${this.props.title} for Device ID ${params.id}`
         });
@@ -45,7 +46,7 @@ export class DeviceProgramsTable extends BaseTable {
 
     getDeviceInfo(device_id) {
         const notThis = this;
-        const url = "/devices/" + String(device_id);
+        const url = `/devices/${String(device_id)}`;
         $.ajax({
           method: "GET",
           url: url,
@@ -103,7 +104,7 @@ export class DeviceProgramsTable extends BaseTable {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
-      const url = `/deviceprograms/${rows[row_index].id}`;
+      const url = `/programs/${rows[row_index].id}`;
 
       $.ajax({
         method: "DELETE",
@@ -112,9 +113,9 @@ export class DeviceProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          // Remove device from list
           const { match: { params } } = $this.props;
-          const url = "/deviceprograms/" + params.id;
+          // Reload the programs for the current device
+          const url = `/devices/${params.id}/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {

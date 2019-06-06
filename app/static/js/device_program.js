@@ -85,7 +85,7 @@ export class DeviceProgram extends BaseComponent {
     // after inserts, updates or deletes
     loadForm(programid) {
         const $this = this;
-        const url = `/deviceprogram/${programid}`;
+        const url = `/programs/${programid}`;
         $.get(url, function (response /* , status */) {
             // We only want the time portion. This will ignore any date.
             const ct = response.data.time.substring(response.data.time.length - 8);
@@ -230,7 +230,7 @@ export class DeviceProgram extends BaseComponent {
       // Marshal everything back to a program
       this.marshalProgram();
       // PUT program back to server
-      const url = `/deviceprogram/${this.state.program.id}`;
+      const url = `/programs/${this.state.program.id}`;
       this.saveProgram("PUT", url, this.state.program)
     }
 

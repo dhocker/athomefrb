@@ -153,7 +153,7 @@ export class BaseComponent extends React.Component {
       const $this = this;
 
       $.ajax({
-        method: "PUT",
+        method: "DELETE",
         url: url,
         data: device,
         dataType: "json",
@@ -181,7 +181,7 @@ export class BaseComponent extends React.Component {
             $this.showDialogBox("Record Updated", data.message, `Program ID ${program.id} updated`);
           }
           else {
-            $this.showDialogBox("Record Created", data.message, `Program ID ${program.id} created`);
+            $this.showDialogBox("Record Created", data.message, `Program ID ${data.id} created`);
           }
         },
         error: function(xhr, status, msg) {
