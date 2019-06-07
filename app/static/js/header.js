@@ -28,11 +28,8 @@ function Header() {
         </NavbarBrand>
         <Nav className="navbar-nav mr-auto">
           <IndexLinkContainer to="/" className="nav-link">
-            <NavItem className="nav-item">Home</NavItem>
+            <NavItem className="nav-item">Devices</NavItem>
           </IndexLinkContainer>
-          <LinkContainer to="/newdevice" className="nav-link">
-            <NavItem className="nav-item">New Device</NavItem>
-          </LinkContainer>
           <LinkContainer to="/about" className="nav-link">
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>

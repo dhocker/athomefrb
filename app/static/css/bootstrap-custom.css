@@ -53,3 +53,11 @@ For some reason the cursor pointer is lost using react-router-bootstrap
 .active {
   font-weight: bold;
 }
+
+/*
+Bootstrap seems to always override the card-link style, so this one
+replaces it where needed.
+*/
+.card-link-x {
+  margin-left: 0.25rem;
+}
