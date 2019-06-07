@@ -18,7 +18,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
-import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import { Button } from 'react-bootstrap';
 import $ from 'jquery';
 
@@ -68,7 +68,9 @@ export class DeviceProgramsTable extends BaseTable {
     getActions(row_index, row) {
         return (
           <td>
-            <Link to={"/editprogram/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Edit</Link>
+            <LinkContainer to={"/editprogram/" + String(row.id)}>
+              <Button className="btn btn-primary btn-sm btn-extra">Edit</Button>
+            </LinkContainer>
             <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onProgramRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
@@ -82,7 +84,9 @@ export class DeviceProgramsTable extends BaseTable {
         const { match: { params } } = this.props;
         return (
           <div>
-            <Link to={"/device/" + String(params.id) + "/newprogram"} className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button">New Program</Link>
+            <LinkContainer to={"/device/" + String(params.id) + "/newprogram"}>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Program</Button>
+            </LinkContainer>
           </div>
         );
     }

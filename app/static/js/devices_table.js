@@ -19,7 +19,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { BaseTable } from './base_table';
-import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import $ from 'jquery';
 // import {  Route, Switch } from "react-router-dom";
 
@@ -45,8 +45,12 @@ export class DevicesTable extends BaseTable {
           <td>
             <Button className="btn btn-primary btn-sm btn-extra" onClick={this.deviceOn.bind(this, row_index)}>On</Button>
             <Button className="btn btn-primary btn-sm btn-extra" onClick={this.deviceOff.bind(this, row_index)}>Off</Button>
-            <Link to={"/editdevice/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Edit</Link>
-            <Link to={"/deviceprograms/" + String(row.id)} className="btn btn-primary btn-sm btn-extra" type="button">Programs</Link>
+            <LinkContainer to={"/editdevice/" + String(row.id)}>
+              <Button className="btn btn-primary btn-sm btn-extra">Edit</Button>
+            </LinkContainer>
+            <LinkContainer to={"/deviceprograms/" + String(row.id)}>
+              <Button className="btn btn-primary btn-sm btn-extra">Programs</Button>
+            </LinkContainer>
             <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
@@ -59,7 +63,9 @@ export class DevicesTable extends BaseTable {
         // This still doesn't work right
         return (
           <div>
-            <Link to="/newdevice" className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button">New Device</Link>
+            <LinkContainer to="/newdevice">
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Device</Button>
+            </LinkContainer>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.saveSelected.bind(this)} type="button">Save Selected</Button>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOn.bind(this)} type="button">All Selected On</Button>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOff.bind(this)} type="button">All Selected Off</Button>
