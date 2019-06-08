@@ -40,6 +40,7 @@ export class EditDeviceForm extends BaseComponent {
 
         this.onControlChange = this.onControlChange.bind(this);
         this.onDeviceTypeClick = this.onDeviceTypeClick.bind(this);
+        this.onGoBack = this.onGoBack.bind(this);
         this.onSave = this.onSave.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
@@ -93,6 +94,10 @@ export class EditDeviceForm extends BaseComponent {
       else {
         this.saveDevice(this.state.device);
       }
+    }
+
+    onGoBack() {
+        this.props.history.goBack();
     }
 
     modalClose() {
@@ -198,8 +203,11 @@ export class EditDeviceForm extends BaseComponent {
               />
             </Form.Group>
 
-            <Button variant="primary" type="button" onClick={this.onSave}>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
               Save
+            </Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
+              Cancel
             </Button>
           </Form>
           {this.renderDialogBox()}

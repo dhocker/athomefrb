@@ -73,6 +73,7 @@ export class DeviceProgram extends BaseComponent {
         this.onClockChange = this.onClockChange.bind(this);
         this.loadForm = this.loadForm.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.onGoBack = this.onGoBack.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -224,6 +225,10 @@ export class DeviceProgram extends BaseComponent {
       program.time = this.state.clocktime;
       // Daymask MTWTFSS
       program.daymask = this.daysToDaymask();
+    }
+
+    onGoBack() {
+        this.props.history.goBack();
     }
 
     onSave() {
@@ -493,8 +498,11 @@ export class DeviceProgram extends BaseComponent {
                 <Row>
                   <Col>
                     <ButtonToolbar>
-                      <Button className="btn-extra-vert btn-sm" variant="primary" onClick={this.onSave}>
+                      <Button className="btn-extra-vert btn-sm btn-extra btn-extra-vert" onClick={this.onSave}>
                         Save
+                      </Button>
+                      <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
+                        Cancel
                       </Button>
                     </ButtonToolbar>
                   </Col>
