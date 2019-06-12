@@ -55,6 +55,7 @@ function Main() {
       </Switch>
       <footer className="page-footer font-small blue pt-4">
         <div className="container-fluid text-right">
+          <p>At Home Control</p>
           <p>Copyright &copy; 2019 by Dave Hocker</p>
         </div>
       </footer>

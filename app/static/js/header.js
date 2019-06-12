@@ -34,6 +34,9 @@ function Header() {
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>
         </Nav>
+        <span class="navbar-text h2">
+          At Home Control
+        </span>
       </Navbar>
     </header>
 )};
