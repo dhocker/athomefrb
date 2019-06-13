@@ -61,3 +61,12 @@ replaces it where needed.
 .card-link-x {
   margin-left: 0.25rem;
 }
+
+/*
+Make the logo text the same color as the logo graphic
+*/
+.navbar-text-logo {
+  color: rgb(252,198,41);
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  font-style: italic;
+}

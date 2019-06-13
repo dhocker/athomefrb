@@ -23,9 +23,6 @@ function Header() {
   return (
     <header>
       <Navbar className="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
-        <NavbarBrand className="navbar-brand">
-          <img src="static/AtHomeBolt.png" alt="AtHomeBolt" className=""/>
-        </NavbarBrand>
         <Nav className="navbar-nav mr-auto">
           <IndexLinkContainer to="/" className="nav-link">
             <NavItem className="nav-item">Devices</NavItem>
@@ -34,9 +31,12 @@ function Header() {
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>
         </Nav>
-        <span class="navbar-text h2">
-          At Home Control
-        </span>
+        <NavbarBrand className="navbar-brand">
+          <img src="static/AtHomeBolt.png" alt="AtHomeBolt" className=""/>
+          <span className="navbar-text-logo h2">
+            At Home Control
+          </span>
+        </NavbarBrand>
       </Navbar>
     </header>
 )};
