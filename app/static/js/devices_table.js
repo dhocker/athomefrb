@@ -43,15 +43,15 @@ export class DevicesTable extends BaseTable {
     getActions(row_index, row) {
         return (
           <td>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.deviceOn.bind(this, row_index)}>On</Button>
-            <Button className="btn btn-primary btn-sm btn-extra" onClick={this.deviceOff.bind(this, row_index)}>Off</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOn.bind(this, row_index)}>On</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOff.bind(this, row_index)}>Off</Button>
             <LinkContainer to={"/editdevice/" + String(row.id)}>
-              <Button className="btn btn-primary btn-sm btn-extra">Edit</Button>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Edit</Button>
             </LinkContainer>
             <LinkContainer to={"/deviceprograms/" + String(row.id)}>
-              <Button className="btn btn-primary btn-sm btn-extra">Programs</Button>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Programs</Button>
             </LinkContainer>
-            <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
+            <Button className="btn btn-danger btn-sm btn-extra btn-extra-vert" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
     };

@@ -69,9 +69,9 @@ export class DeviceProgramsTable extends BaseTable {
         return (
           <td>
             <LinkContainer to={"/editprogram/" + String(row.id)}>
-              <Button className="btn btn-primary btn-sm btn-extra">Edit</Button>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Edit</Button>
             </LinkContainer>
-            <Button className="btn btn-danger btn-sm btn-extra" onClick={this.onProgramRemove.bind(this, row_index)}>Remove</Button>
+            <Button className="btn btn-danger btn-sm btn-extra btn-extra-vert" onClick={this.onProgramRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
     };
