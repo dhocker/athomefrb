@@ -189,12 +189,12 @@ DevicesTable.propTypes = {
 
 // Defines the columns in the devices table
 const deviceTableColumns = [
-    { colname: 'id', label: 'ID', type: 'text', sortable: true },
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
     { colname: 'location', label: 'Location', type: 'text', sortable: true },
     { colname: 'type', label: 'Type', type: 'text', sortable: true },
     { colname: 'address', label: 'Address', type: 'text', sortable: true },
-    { colname: 'selected', label: 'Selected', type: 'checkbox', sortable: true }
+    { colname: 'selected', label: 'Selected', type: 'checkbox', sortable: true },
+    { colname: 'id', label: 'ID', type: 'text', sortable: true }
 ];
 
 // Defaults for a standard devices table

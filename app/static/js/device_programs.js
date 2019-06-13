@@ -141,9 +141,9 @@ DeviceProgramsTable.propTypes = {
 
 // Defines the columns in the devices table
 const programTableColumns = [
-    { colname: 'id', label: 'ID', type: 'text', sortable: true },
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
-    { colname: 'summary', label: 'Summary', type: 'text', sortable: true }
+    { colname: 'summary', label: 'Summary', type: 'text', sortable: true },
+    { colname: 'id', label: 'ID', type: 'text', sortable: true },
 ];
 
 // Defaults for a standard device programs table
