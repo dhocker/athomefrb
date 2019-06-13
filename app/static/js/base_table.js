@@ -35,18 +35,11 @@ export class BaseTable extends BaseComponent {
         super(props);
 
         this.column_count = props.cols.length;
-        this.sort_col = 0;
+        this.sort_col = props.default_sort_column;
         this.sort_dir = [];
         // 1 = sort asc, -1 = sort desc
         for (let i = 0; i < this.column_count; i++) {
-            // Set up the NEXT sort direction
-            if (i > 0) {
-                this.sort_dir.push(SORT_ASC);
-            }
-            else {
-                // The first column is the default sort column, so it is already sorted asc
-                this.sort_dir.push(SORT_DESC);
-            }
+          this.sort_dir.push(SORT_ASC);
         }
 
         this.messageTimer = null
@@ -90,12 +83,7 @@ export class BaseTable extends BaseComponent {
             console.log("Data rows received: " + String(response.data.length));
             const rows = response.data;
             // Repeat the last sort
-            if ($this.sort_col === 0 && $this.sort_dir[0] === SORT_DESC) {
-                // Default sort, do nothing
-            }
-            else {
-                $this.sortRows(rows, $this.sort_col, $this.sort_dir[$this.sort_col] * SORT_INVERT);
-            }
+            $this.sortRows(rows, $this.sort_col, $this.sort_dir[$this.sort_col]);
             $this.setState({rows: rows});
           },
           error: function(jqxhr, status, msg) {
@@ -278,7 +266,9 @@ BaseTable.propTypes = {
     title: PropTypes.string.isRequired,
     cols: PropTypes.array.isRequired,
     url: PropTypes.string.isRequired,
+    default_sort_column: PropTypes.number.isRequired
 };
 
 BaseTable.defaultProps = {
+  default_sort_column: 0
 };

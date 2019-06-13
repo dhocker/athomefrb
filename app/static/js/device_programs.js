@@ -149,6 +149,7 @@ const programTableColumns = [
 // Defaults for a standard device programs table
 DeviceProgramsTable.defaultProps = {
     cols: programTableColumns,
+    default_sort_column: 0,
     title: "Programs",
     class: "table table-striped table-condensed",
     bordered: true,
