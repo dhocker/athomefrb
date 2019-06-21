@@ -118,7 +118,7 @@ class AHPSRequest:
         :param response:
         :return:
         """
-        jr = json.loads(response)["X10Response"]
+        jr = json.loads(response)
 
         logger.debug("Response for request: %s", jr["request"])
 
@@ -153,7 +153,7 @@ class AHPSRequest:
 
             # Receive data from the server and shut down
             json_data = AHPSRequest.read_json(sock)
-            self._last_response = json.loads(json_data)["X10Response"]
+            self._last_response = json.loads(json_data)
         except Exception as ex:
             logger.error(str(ex))
             self._last_error_msg = {"message": str(ex)}
