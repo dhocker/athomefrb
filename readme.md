@@ -10,31 +10,40 @@ using brew.
 
     brew install node
 
-**TODO Check this out. By now, Node should be part of the Raspbian
-distro.**
-
-On Raspbian, installing nodejs a little more complicated. Detailed information
+On Raspbian versions prior to Buster, 
+installing nodejs a little more complicated. Detailed information
 can be found here:
 
 [http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/)
+
 [https://github.com/nodesource/distributions](https://github.com/nodesource/distributions)
 
 This sequence of commands updates the Debian apt package system to
-include the latest NodeSource releases. Then, it installs Version 10
+include the latest NodeSource releases. Then, it installs Version 12
 of nodejs.
 
-    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
     sudo apt-get install -y nodejs
 
-Create a venv using the requirements.txt file.
+Raspbian Buster ships with nodejs v10.15.2 and npm 5.8.0 available. 
+Install these using apt.
+
+```bash
+sudo apt-get install nodejs npm
+```
+
+Once nodejs and npm are available, you can create a 
+venv using the requirements.txt file.
 
     mkvirtualenv -p python3 -r requirements.txt athomefrb3
 
-Install Webpack and various dependencies called out in package.json. Note that on a system 
-like a Raspberry Pi this can take a long time.
+Install Webpack and various dependencies called out in package.json. On a system 
+like a Raspberry Pi this can take a long, long time.
 
     npm install
 
+**NOTE:** npm tends to complain about the version of nodejs you have installed.
+For example, Raspbian Buster, initially shipped with nodejs 10. However, 
 ## Development Build
 Run a one time build based on webpack.config.js
 
