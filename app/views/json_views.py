@@ -185,6 +185,32 @@ def save_device_program(id):
     return response
 
 
+@app.route('/devices/selected/state', methods=['PUT'])
+def set_selected_devices_state():
+    arg = request.form['state']
+    api_req = AHPSRequest()
+    if arg == "on":
+        res = api_req.selected_devices_on()
+    elif arg == "off":
+        res = api_req.selected_devices_off()
+    else:
+        # Return an error
+        res = None
+
+    # We are obligated to send a json response
+    if res:
+        resp = jsonify(res)
+        if res["result-code"]:
+            resp.status_code = 500
+        else:
+            resp.status_code = 200
+        return resp
+
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/devices/<id>/state', methods=['PUT'])
 def set_devices_state(id):
     """
