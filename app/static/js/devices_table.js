@@ -100,12 +100,12 @@ export class DevicesTable extends BaseTable {
 
     // All selected on
     selectedOn(event) {
-      this.showDialogBox("Selected Devices On", "Success", "All selected devices have been turned on");
+      this.setSelectedDevicesState("on");
     };
 
     // All selected off
     selectedOff(event) {
-      this.showDialogBox("Selected Devices Off", "Success", "All selected devices have been turned off");
+      this.setSelectedDevicesState("off");
     };
 
     // Device on
@@ -176,6 +176,26 @@ export class DevicesTable extends BaseTable {
         error: function(xhr, status, msg) {
           const response = JSON.parse(xhr.responseText);
           $this.showDialogBox(`Device ${rows[row_index]["name"]} ${new_state}`, msg, response.message)
+        }
+      });
+    }
+
+    // change selected devices state
+    setSelectedDevicesState(new_state) {
+      const $this = this;
+      const url = `/devices/selected/state`;
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: { 'state': new_state },
+        dataType: "json",
+        success: function(data, status, xhr) {
+          $this.showMessage(`All selected devices turned ${new_state}`);
+        },
+        error: function(xhr, status, msg) {
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox(`All selected devices ${new_state}`, msg, response.message)
         }
       });
     }

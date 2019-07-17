@@ -164,7 +164,6 @@ class AHPSRequest:
 
         return self.last_response
 
-    # TODO Replace address and house code with device-id
 
     def device_on(self, device_id, dim_amount):
         """
@@ -218,6 +217,26 @@ class AHPSRequest:
         data = AHPSRequest.create_request("Bright")
         data["args"]["device-id"] = device_id
         data["args"]["bright-amount"] = bright_amount
+
+        return self.send_command(data)
+
+
+    def selected_devices_on(self):
+        """
+        Send all selected devices on command
+        :return:
+        """
+        data = AHPSRequest.create_request("AllSelectedDevicesOn")
+
+        return self.send_command(data)
+
+
+    def selected_devices_off(self):
+        """
+        Send all selected devices on command
+        :return:
+        """
+        data = AHPSRequest.create_request("AllSelectedDevicesOff")
 
         return self.send_command(data)
 
