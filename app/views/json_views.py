@@ -52,7 +52,7 @@ logger = logging.getLogger("app")
 def get_devices():
     api_req = AHPSRequest()
     res = api_req.get_all_devices()
-    if res:
+    if res and "devices" in res.keys():
         return jsonify({"data": res["devices"]})
     response = jsonify(api_req.last_error)
     response.status_code = 500
