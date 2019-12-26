@@ -46,6 +46,7 @@ export class NewDevice extends EditDeviceForm {
 
     // Override EditDevice class which loads the device
     componentDidMount() {
+      this.loadDeviceLists();
     }
 
     onSave() {

@@ -59,6 +59,18 @@ def get_devices():
     return response
 
 
+@app.route("/availabledevices/tplink", methods=['GET'])
+def get_available_tplink_devices():
+    api_req = AHPSRequest()
+    res = api_req.get_all_available_devices("tplink")
+    if res and "devices" in res.keys():
+        return jsonify({"data": res["devices"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+    return ""
+
+
 @app.route("/devices/<id>", methods=['GET'])
 def get_device(id):
     api_req = AHPSRequest()

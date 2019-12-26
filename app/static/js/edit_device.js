@@ -30,7 +30,9 @@ export class EditDeviceForm extends BaseComponent {
           ...{
             device: {
               type: "x10",
+              address: "",
             },
+            tplink_list: [],
             modalShow: false,
             modalTitle: "",
             modalSubtitle: "",
@@ -44,6 +46,8 @@ export class EditDeviceForm extends BaseComponent {
         this.onSave = this.onSave.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
+        this.generateAddressControl = this.generateAddressControl.bind(this);
+        this.onTPLinkAddressSelect = this.onTPLinkAddressSelect.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -60,6 +64,25 @@ export class EditDeviceForm extends BaseComponent {
           url: url,
           success: function (response /* , status */) {
               $this.setState({device: response.data});
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            $this.showMessage(`${status}, ${msg}, ${response.message}`);
+          }
+        });
+
+        // TODO Load list of available TPLink devices (or more generally WiFi devices)
+        $this.loadDeviceLists();
+    }
+
+    loadDeviceLists() {
+        // Load list of available TPLink devices (or more generally WiFi devices)
+        const $this = this;
+        const url = `/availabledevices/tplink`;
+        $.ajax({
+          url: url,
+          success: function (response /* , status */) {
+              $this.setState({tplink_list: response.data});
           },
           error: function(jqxhr, status, msg) {
             const response = JSON.parse(jqxhr.responseText);
@@ -83,7 +106,13 @@ export class EditDeviceForm extends BaseComponent {
 
     onDeviceTypeClick(event) {
       let deviceType = event.target.name;
-      this.setState({device: {...this.state.device, "type": deviceType}});
+      // If device type has changed, reset the address
+      if (deviceType !== this.state.device.type) {
+        this.setState({device: {...this.state.device, "type": deviceType, "address": ""}});
+      }
+      else {
+        this.setState({device: {...this.state.device, "type": deviceType}});
+      }
     }
 
     onSave() {
@@ -112,6 +141,80 @@ export class EditDeviceForm extends BaseComponent {
 
     generateTitle() {
       return <h2>Edit Device ID {this.state.device.id}</h2>
+    }
+
+    generateAddressControl() {
+      switch (this.state.device.type) {
+        case "x10":
+          return this.generateX10AddressControl();
+        case "tplink":
+          return this.generateTPLinkAddressControl();
+        default:
+      }
+
+      return "";
+    }
+
+    generateX10AddressControl() {
+      return (
+        <Form.Group controlId="formGroupDeviceAddress">
+          <Form.Label>House Device Code (A1-G16)</Form.Label>
+          <Form.Control
+            type="text"
+            name="address"
+            defaultValue={this.state.device.address}
+            onChange={this.onControlChange}
+            placeholder="X10 module house-device-code"
+          />
+        </Form.Group>
+      );
+    }
+
+    generateTPLinkAddressControl() {
+      const $this = this;
+
+      // Build an array of drop down items (available devices)
+      let available_devices = [];
+      for (var address in $this.state.tplink_list) {
+        const di = <Dropdown.Item
+          eventKey={address}
+          key={address}
+          name={this.state.tplink_list[address]}
+          onSelect={this.onTPLinkAddressSelect}
+          >
+          {$this.state.tplink_list[address]} ({address})
+        </Dropdown.Item>;
+
+        available_devices.push(di);
+      };
+
+      // Manufacture a title for the drop down control
+      let title = ""
+      if ($this.state.device.address) {
+        if ($this.state.device.address in $this.state.tplink_list) {
+          title = $this.state.tplink_list[$this.state.device.address] + " (" + this.state.device.address + ")";
+        }
+        else {
+          title = "Name Unknown (" + this.state.device.address + ")";
+        }
+      }
+
+      return (
+        <Form.Group controlId="formGroupDeviceAddress">
+          <Form.Label>Device (IP Address)</Form.Label>
+          <DropdownButton
+            id="device-address"
+            title={title}
+          >
+            {available_devices}
+          </DropdownButton>
+        </Form.Group>
+      );
+    }
+
+    onTPLinkAddressSelect(key, event) {
+      let deviceAddress = key;
+      this.setState({device: {...this.state.device, "address": deviceAddress}});
     }
 
     validate(device) {
@@ -184,16 +287,9 @@ export class EditDeviceForm extends BaseComponent {
                 <Dropdown.Item name="tplink" onClick={this.onDeviceTypeClick}>tplink</Dropdown.Item>
               </DropdownButton>
             </Form.Group>
-            <Form.Group controlId="formGroupDeviceAddress">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                name="address"
-                defaultValue={this.state.device.address}
-                onChange={this.onControlChange}
-                placeholder="X10 house-device-code or IP address"
-              />
-            </Form.Group>
+
+            {this.generateAddressControl()}
+
             <Form.Group controlId="formGroupDeviceSelected">
               <Form.Label>Selected</Form.Label>
               <Form.Check

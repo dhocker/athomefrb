@@ -294,6 +294,17 @@ class AHPSRequest:
         return response
 
 
+    def get_all_available_devices(self, device_type):
+        """
+        Query for all available devices of a given type
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryAvailableDevices")
+        req["args"]["type"] = device_type
+        response = self.send_command(req)
+        return response
+
+
     def get_device(self, device_id):
         """
         Query a device by its device id
