@@ -33,6 +33,7 @@ export class EditDeviceForm extends BaseComponent {
               address: "",
             },
             tplink_list: [],
+            meross_list: [],
             modalShow: false,
             modalTitle: "",
             modalSubtitle: "",
@@ -47,7 +48,7 @@ export class EditDeviceForm extends BaseComponent {
         this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
         this.generateAddressControl = this.generateAddressControl.bind(this);
-        this.onTPLinkAddressSelect = this.onTPLinkAddressSelect.bind(this);
+        this.onDeviceAddressSelect = this.onDeviceAddressSelect.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -76,13 +77,26 @@ export class EditDeviceForm extends BaseComponent {
     }
 
     loadDeviceLists() {
-        // Load list of available TPLink devices (or more generally WiFi devices)
+        // Load list of available TPLink devices
         const $this = this;
-        const url = `/availabledevices/tplink`;
+        let url = `/availabledevices/tplink`;
         $.ajax({
           url: url,
           success: function (response /* , status */) {
               $this.setState({tplink_list: response.data});
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            $this.showMessage(`${status}, ${msg}, ${response.message}`);
+          }
+        });
+
+        // Load list of available Meross devices
+        url = `/availabledevices/meross`;
+        $.ajax({
+          url: url,
+          success: function (response /* , status */) {
+              $this.setState({meross_list: response.data});
           },
           error: function(jqxhr, status, msg) {
             const response = JSON.parse(jqxhr.responseText);
@@ -148,7 +162,9 @@ export class EditDeviceForm extends BaseComponent {
         case "x10":
           return this.generateX10AddressControl();
         case "tplink":
-          return this.generateTPLinkAddressControl();
+          return this.generateDeviceAddressControl(this.state.tplink_list);
+        case "meross":
+          return this.generateDeviceAddressControl(this.state.meross_list);
         default:
       }
 
@@ -170,19 +186,19 @@ export class EditDeviceForm extends BaseComponent {
       );
     }
 
-    generateTPLinkAddressControl() {
+    generateDeviceAddressControl(device_list) {
       const $this = this;
 
       // Build an array of drop down items (available devices)
       let available_devices = [];
-      for (var address in $this.state.tplink_list) {
+      for (var address in device_list) {
         const di = <Dropdown.Item
           eventKey={address}
           key={address}
-          name={this.state.tplink_list[address]}
-          onSelect={this.onTPLinkAddressSelect}
+          name={device_list[address]}
+          onSelect={this.onDeviceAddressSelect}
           >
-          {$this.state.tplink_list[address]} ({address})
+          {device_list[address]} ({address})
         </Dropdown.Item>;
 
         available_devices.push(di);
@@ -191,8 +207,8 @@ export class EditDeviceForm extends BaseComponent {
       // Manufacture a title for the drop down control
       let title = ""
       if ($this.state.device.address) {
-        if ($this.state.device.address in $this.state.tplink_list) {
-          title = $this.state.tplink_list[$this.state.device.address] + " (" + this.state.device.address + ")";
+        if ($this.state.device.address in device_list) {
+          title = device_list[$this.state.device.address] + " (" + this.state.device.address + ")";
         }
         else {
           title = "Name Unknown (" + this.state.device.address + ")";
@@ -201,7 +217,7 @@ export class EditDeviceForm extends BaseComponent {
 
       return (
         <Form.Group controlId="formGroupDeviceAddress">
-          <Form.Label>Device (IP Address)</Form.Label>
+          <Form.Label>Device Address</Form.Label>
           <DropdownButton
             id="device-address"
             title={title}
@@ -212,7 +228,7 @@ export class EditDeviceForm extends BaseComponent {
       );
     }
 
-    onTPLinkAddressSelect(key, event) {
+    onDeviceAddressSelect(key, event) {
       let deviceAddress = key;
       this.setState({device: {...this.state.device, "address": deviceAddress}});
     }
@@ -285,6 +301,7 @@ export class EditDeviceForm extends BaseComponent {
               <DropdownButton id="device-type" title={this.state.device.type}>
                 <Dropdown.Item name="x10" onClick={this.onDeviceTypeClick}>x10</Dropdown.Item>
                 <Dropdown.Item name="tplink" onClick={this.onDeviceTypeClick}>tplink</Dropdown.Item>
+                <Dropdown.Item name="meross" onClick={this.onDeviceTypeClick}>meross</Dropdown.Item>
               </DropdownButton>
             </Form.Group>
 

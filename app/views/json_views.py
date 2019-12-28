@@ -64,7 +64,21 @@ def get_available_tplink_devices():
     api_req = AHPSRequest()
     res = api_req.get_all_available_devices("tplink")
     if res and "devices" in res.keys():
-        return jsonify({"data": res["devices"]})
+        kv = res["devices"]
+        return jsonify({"data": kv})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+    return ""
+
+
+@app.route("/availabledevices/meross", methods=['GET'])
+def get_available_meross_devices():
+    api_req = AHPSRequest()
+    res = api_req.get_all_available_devices("meross")
+    if res and "devices" in res.keys():
+        kv = res["devices"]
+        return jsonify({"data": kv})
     response = jsonify(api_req.last_error)
     response.status_code = 500
     return response
