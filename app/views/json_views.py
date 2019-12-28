@@ -42,10 +42,18 @@ from flask import jsonify, request, make_response
 from app.ahps.ahps_api import AHPSRequest
 from app.ahps.sun_data import get_astral_data
 from configuration import Configuration
+from Version import get_version
 import logging
 
 
 logger = logging.getLogger("app")
+
+
+@app.route("/version", methods=['GET'])
+def get_app_version():
+    response = jsonify(get_version())
+    response.status_code = 200
+    return response
 
 
 @app.route("/devices", methods=['GET'])
@@ -281,7 +289,8 @@ def save_device(id):
     :return:
     """
     # NOTE
-    # The jQuery $.ajax call sends arguments as the data property
+    # The jQuery $.ajax call sends arguments as the data property[TPLink Python Library](https://github.com/GadgetReactor/pyHS100)
+    # 5.  [Meross Python Library](https://github.com/albertogeniola/MerossIot)
     # in the initiating call. The arguments show up in the
     # request.form property provided by Flask. So,
     # data: { 'state': new_state } --> request.form['state']

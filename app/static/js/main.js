@@ -22,6 +22,7 @@ import { DeviceProgramsTable } from './device_programs';
 import { DeviceProgram } from './device_program';
 import { NewProgram } from './new_program';
 import About from './about';
+import { VersionComponent } from './version_component';
 
 export function NotImplemented() {
   return (
@@ -53,10 +54,10 @@ function Main() {
         <Route path="/editprogram/:id" component={DeviceProgram} />
         <Route path="/device/:id/newprogram" component={NewProgram} />
       </Switch>
-      <footer className="page-footer font-small blue pt-4">
+      <footer className="page-footer font-small blue">
         <div className="container-fluid text-right">
-          <p>At Home Control</p>
-          <p>Copyright &copy; 2019 by Dave Hocker</p>
+          <p className="mb-0"><small>At Home Control <VersionComponent/></small></p>
+          <p><small>Copyright &copy; 2019, 2020 by Dave Hocker</small></p>
         </div>
       </footer>
     </div>
