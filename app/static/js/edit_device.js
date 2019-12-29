@@ -264,6 +264,16 @@ export class EditDeviceForm extends BaseComponent {
             return "Invalid IP address";
           }
           break;
+        case "meross":
+          // The Meross UUID looks like a GUID without hyphens, but it fails a real GUID test
+          // So we do an empirical check: 32 hex digits
+          if (addr.length !== 32) {
+            return "Wrong length UUID for Meross device";
+          }
+          if (!(/^[0-9a-f]{32}$/.test(addr))) {
+            return "Invalid UUID for Meross device";
+          }
+          break;
         default:
           break;
       }
