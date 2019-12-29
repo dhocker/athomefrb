@@ -233,6 +233,16 @@ export class BaseTable extends BaseComponent {
                       value={row_index} onChange={$this.onCheckChange}
                     />
                   </td>);
+                case 'longtext':
+                  // Truncate text to right-most 'rightlen' characters
+                  // Mostly used for device address
+                  let t = row[colData.colname];
+                  const len = t.length;
+                  // 15 is chosen because it is the max length of an IP address
+                  if (len > 15) {
+                    t = "..." + t.substring(len - colData.rightlen, len);
+                  }
+                  return (<td key={colData.colname}>{t}</td>);
                 default:
                   return (<td key={colData.colname}>{row[colData.colname]} (default)</td>);
               }
