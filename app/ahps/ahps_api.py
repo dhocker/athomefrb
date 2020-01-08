@@ -294,13 +294,13 @@ class AHPSRequest:
         return response
 
 
-    def get_all_available_devices(self, device_type):
+    def get_all_available_devices(self, manufacturer):
         """
         Query for all available devices of a given type
         :return:
         """
         req = AHPSRequest.create_request("QueryAvailableDevices")
-        req["args"]["type"] = device_type
+        req["args"]["type"] = manufacturer
         response = self.send_command(req)
         return response
 

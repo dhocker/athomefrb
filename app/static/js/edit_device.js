@@ -198,7 +198,7 @@ export class EditDeviceForm extends BaseComponent {
           name={device_list[address]}
           onSelect={this.onDeviceAddressSelect}
           >
-          {device_list[address]} ({address})
+          {device_list[address].type} &lt;{device_list[address].label} ({address})&gt;
         </Dropdown.Item>;
 
         available_devices.push(di);
@@ -208,7 +208,9 @@ export class EditDeviceForm extends BaseComponent {
       let title = ""
       if ($this.state.device.address) {
         if ($this.state.device.address in device_list) {
-          title = device_list[$this.state.device.address] + " (" + this.state.device.address + ")";
+          title = device_list[$this.state.device.address].type + " <" +
+            device_list[$this.state.device.address].label +
+            " (" + $this.state.device.address + ")>";
         }
         else {
           title = "Name Unknown (" + this.state.device.address + ")";
