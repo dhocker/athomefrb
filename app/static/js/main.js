@@ -21,6 +21,7 @@ import { HomePage } from './home_page';
 import { DeviceProgramsTable } from './device_programs';
 import { DeviceProgram } from './device_program';
 import { NewProgram } from './new_program';
+import { ProgramsTable} from './programs_table';
 import About from './about';
 import { VersionComponent } from './version_component';
 
@@ -49,6 +50,7 @@ function Main() {
         <Route path="/" exact component={HomePage} />
         <Route path="/editdevice" component={HomePage} />
         <Route path="/newdevice" component={HomePage} />
+        <Route path="/programs" exact component={ProgramsTable} />
         <Route path="/about/" component={About} />
         <Route path="/deviceprograms/:id" component={DeviceProgramsTable} />
         <Route path="/editprogram/:id" component={DeviceProgram} />

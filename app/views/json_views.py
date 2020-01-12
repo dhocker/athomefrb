@@ -128,6 +128,27 @@ def create_new_device_program(id):
     return response
 
 
+@app.route("/programs", methods=['GET'])
+def get_all_programs():
+    """
+    Get all programs
+    :param id:
+    :return:
+    """
+    api_req = AHPSRequest()
+    res = api_req.get_all_programs()
+
+    # Build response with program summary
+    if res:
+        for p in res["programs"]:
+            p["summary"] = build_program_summary(p)
+
+        return jsonify({"data": res["programs"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/devices/<id>/programs", methods=['GET'])
 def get_device_programs(id):
     """

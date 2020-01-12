@@ -371,6 +371,16 @@ class AHPSRequest:
         return response
 
 
+    def get_all_programs(self):
+        """
+        Query for all programs
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryPrograms")
+        response = self.send_command(req)
+        return response
+
+
     def get_programs_for_device_id(self, device_id):
         """
         Query for all programs for a given device id
