@@ -211,7 +211,7 @@ DevicesTable.propTypes = {
 const deviceTableColumns = [
     { colname: 'location', label: 'Location', type: 'text', sortable: true },
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
-    { colname: 'type', label: 'Mfg', type: 'text', sortable: true },
+    { colname: 'mfg', label: 'Mfg', type: 'text', sortable: true },
     { colname: 'address', label: 'Address/UUID', type: 'longtext', rightlen: 12, sortable: true },
     { colname: 'selected', label: 'Selected', type: 'checkbox', sortable: true },
     { colname: 'id', label: 'ID', type: 'text', sortable: true }
