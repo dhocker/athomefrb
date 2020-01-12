@@ -29,7 +29,7 @@ export class EditDeviceForm extends BaseComponent {
           ...this.state,
           ...{
             device: {
-              type: "x10",
+              mfg: "x10",
               address: "",
             },
             tplink_list: [],
@@ -42,7 +42,7 @@ export class EditDeviceForm extends BaseComponent {
         };
 
         this.onControlChange = this.onControlChange.bind(this);
-        this.onDeviceTypeClick = this.onDeviceTypeClick.bind(this);
+        this.onDeviceMfgClick = this.onDeviceMfgClick.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
         this.onSave = this.onSave.bind(this);
         this.modalClose = this.modalClose.bind(this);
@@ -118,14 +118,14 @@ export class EditDeviceForm extends BaseComponent {
       this.setState({device: {...this.state.device, [fieldName]: fieldVal}});
     }
 
-    onDeviceTypeClick(event) {
-      let deviceType = event.target.name;
-      // If device type has changed, reset the address
-      if (deviceType !== this.state.device.type) {
-        this.setState({device: {...this.state.device, "type": deviceType, "address": ""}});
+    onDeviceMfgClick(event) {
+      let deviceMfg = event.target.name;
+      // If device manufacturer has changed, reset the address
+      if (deviceMfg !== this.state.device.mfg) {
+        this.setState({device: {...this.state.device, "mfg": deviceMfg, "address": ""}});
       }
       else {
-        this.setState({device: {...this.state.device, "type": deviceType}});
+        this.setState({device: {...this.state.device, "mfg": deviceMfg}});
       }
     }
 
@@ -158,7 +158,9 @@ export class EditDeviceForm extends BaseComponent {
     }
 
     generateAddressControl() {
-      switch (this.state.device.type) {
+      // Note that mfg is manufacturer (X10, TPLink, Meross)
+      // and type is Plug or Bulb
+      switch (this.state.device.mfg) {
         case "x10":
           return this.generateX10AddressControl();
         case "tplink":
@@ -198,7 +200,7 @@ export class EditDeviceForm extends BaseComponent {
           name={device_list[address]}
           onSelect={this.onDeviceAddressSelect}
           >
-          {device_list[address].type} &lt;{device_list[address].label} ({address})&gt;
+          {device_list[address].mfg} &lt;{device_list[address].label} ({address})&gt;
         </Dropdown.Item>;
 
         available_devices.push(di);
@@ -243,7 +245,7 @@ export class EditDeviceForm extends BaseComponent {
         return "Location is required";
       }
       const addr = device.address.toLowerCase();
-      switch (device.type) {
+      switch (device.mfg) {
         case "x10":
           // An X10 address is A1...A16 through L1...L16 (A-L with 1-16)
           if (addr.length < 2) {
@@ -308,12 +310,12 @@ export class EditDeviceForm extends BaseComponent {
                 onChange={this.onControlChange}
               />
             </Form.Group>
-            <Form.Group controlId="formGroupDeviceType">
-              <Form.Label>Type</Form.Label>
-              <DropdownButton id="device-type" title={this.state.device.type}>
-                <Dropdown.Item name="x10" onClick={this.onDeviceTypeClick}>x10</Dropdown.Item>
-                <Dropdown.Item name="tplink" onClick={this.onDeviceTypeClick}>tplink</Dropdown.Item>
-                <Dropdown.Item name="meross" onClick={this.onDeviceTypeClick}>meross</Dropdown.Item>
+            <Form.Group controlId="formGroupDeviceMfg">
+              <Form.Label>Manufacturer</Form.Label>
+              <DropdownButton id="device-mfg" title={this.state.device.mfg}>
+                <Dropdown.Item name="x10" onClick={this.onDeviceMfgClick}>x10</Dropdown.Item>
+                <Dropdown.Item name="tplink" onClick={this.onDeviceMfgClick}>tplink</Dropdown.Item>
+                <Dropdown.Item name="meross" onClick={this.onDeviceMfgClick}>meross</Dropdown.Item>
               </DropdownButton>
             </Form.Group>
 
