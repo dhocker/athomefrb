@@ -32,9 +32,8 @@ export class NewProgram extends DeviceProgram {
   }
 
     generateTitle() {
-      const { match: { params } } = this.props;
       return (
-        <h2>New Device Program for Device ID {params.id}</h2>
+        <h2>New Program</h2>
       );
     }
 
@@ -42,8 +41,7 @@ export class NewProgram extends DeviceProgram {
       // Marshal everything back to a program
       this.marshalProgram();
       // POST program back to server
-      const { match: { params } } = this.props;
-      const url = `/devices/${params.id}/programs`;
+      const url = "/programs";
       this.saveProgram("POST", url, this.state.program)
     }
 }

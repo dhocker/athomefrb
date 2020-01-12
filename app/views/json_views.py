@@ -104,11 +104,10 @@ def get_device(id):
     return response
 
 
-@app.route("/devices/<id>/programs", methods=['POST'])
-def create_new_device_program(id):
+@app.route("/programs", methods=['POST'])
+def create_new_program():
     program = {}
     program["name"] = request.form['name']
-    program["device-id"] = id
     program["day-mask"] = request.form['daymask']
     program["trigger-method"] = request.form['triggermethod']
     program["time"] = request.form['time']
@@ -215,7 +214,6 @@ def save_device_program(id):
     """
     program = {"id": id}
     program["name"] = request.form['name']
-    program["device-id"] = request.form['deviceid']
     program["day-mask"] = request.form['daymask']
     program["trigger-method"] = request.form['triggermethod']
     program["time"] = request.form['time']

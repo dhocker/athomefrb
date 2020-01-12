@@ -34,7 +34,6 @@ export class DeviceProgram extends BaseComponent {
             program: {
               id: "",
               name: "",
-              deviceid: "",
               daymask: ".......",
               triggermethod: "none",
               offset: 0,
@@ -171,7 +170,7 @@ export class DeviceProgram extends BaseComponent {
     }
 
     generateTitle() {
-      return <h2>Edit Device ID {this.state.program.deviceid} Program ID {this.state.program.id}</h2>
+      return <h2>Edit Program ID {this.state.program.id}</h2>
     }
 
     clockTimeControl() {
@@ -338,7 +337,7 @@ export class DeviceProgram extends BaseComponent {
               {this.generateTitle()}
               {this.generateMessage()}
               <Form>
-                <Form.Group controlId="formGroupDeviceName">
+                <Form.Group controlId="formGroupProgramName">
                   <Form.Label>Program Name</Form.Label>
                   <Form.Control
                     style={{ width: '30rem' }}
