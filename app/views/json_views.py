@@ -169,6 +169,40 @@ def get_device_programs(id):
     return response
 
 
+@app.route("/availableprograms/device/<id>", methods=['GET'])
+def get_available_device_programs(id):
+    """
+    Get all programs available for assignment to a given device ID
+    :param id: The device ID for avialable programs
+    :return:
+    """
+    api_req = AHPSRequest()
+    res = api_req.get_available_programs_for_device_id(id)
+
+    # Build response with program summary
+    if res:
+        for p in res["programs"]:
+            p["summary"] = build_program_summary(p)
+
+        return jsonify({"data": res["programs"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
+@app.route("/deviceprograms/<device_id>/<program_id>", methods=['POST'])
+def add_program_to_device(device_id, program_id):
+    api_req = AHPSRequest()
+
+    r = api_req.assign_program_to_device(device_id, program_id)
+
+    if r and r["result-code"] == 0:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/programs/<id>', methods=['DELETE'])
 def delete_device_program(id):
     """

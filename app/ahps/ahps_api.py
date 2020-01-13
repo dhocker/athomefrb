@@ -393,6 +393,25 @@ class AHPSRequest:
         return response
 
 
+    def get_available_programs_for_device_id(self, device_id):
+        """
+        Query for all programs available for assignment to a given device id
+        :param device_id:
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryAvailablePrograms")
+        req["args"]["device-id"] = device_id
+        response = self.send_command(req)
+        return response
+
+    def assign_program_to_device(self, device_id, program_id):
+        req = AHPSRequest.create_request("AssignProgram")
+        req["args"]["device-id"] = device_id
+        req["args"]["program-id"] = program_id
+        response = self.send_command(req)
+        return response
+
+
     def get_program_by_id(self, program_id):
         """
         Query for a program by its id
