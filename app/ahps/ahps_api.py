@@ -436,13 +436,14 @@ class AHPSRequest:
         return response
 
 
-    def delete_device_program(self, program_id):
+    def delete_device_program(self, device_id, program_id):
         """
-        Delete a device parogram by its program id
+        Delete a device program from its device
         :param program_id:
         :return:
         """
         req = AHPSRequest.create_request("DeleteDeviceProgram")
+        req["args"]["device-id"] = device_id
         req["args"]["program-id"] = program_id
         response = self.send_command(req)
         return response

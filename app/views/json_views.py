@@ -203,16 +203,16 @@ def add_program_to_device(device_id, program_id):
     return response
 
 
-@app.route('/programs/<id>', methods=['DELETE'])
-def delete_device_program(id):
+@app.route('/devices/<device_id>/programs/<program_id>', methods=['DELETE'])
+def delete_device_program(device_id, program_id):
     """
-    Delete a device program
+    Delete a program from a device
     :param id:
     :return:
     """
     api_req = AHPSRequest()
 
-    r = api_req.delete_device_program(id)
+    r = api_req.delete_device_program(device_id, program_id)
 
     # We are obligated to send a json response
     if r:

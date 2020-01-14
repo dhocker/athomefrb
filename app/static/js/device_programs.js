@@ -111,7 +111,8 @@ export class DeviceProgramsTable extends BaseTable {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
-      const url = `/programs/${rows[row_index].id}`;
+      const { match: { params } } = this.props;
+      const url = `/devices/${params.id}/programs/${rows[row_index].id}`;
 
       $.ajax({
         method: "DELETE",
@@ -120,7 +121,6 @@ export class DeviceProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          const { match: { params } } = $this.props;
           // Reload the programs for the current device
           const url = `/devices/${params.id}/programs`;
           $this.loadTable(url);
