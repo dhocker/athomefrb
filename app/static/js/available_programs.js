@@ -215,10 +215,10 @@ AvailableProgramsTable.propTypes = {
 
 // Defines the columns in the devices table
 const programTableColumns = [
+    { colname: 'selected', label: 'Select', type: 'checkbox', sortable: false },
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
     { colname: 'summary', label: 'Summary', type: 'text', sortable: true },
     { colname: 'id', label: 'ID', type: 'text', sortable: true },
-    { colname: 'selected', label: 'Select', type: 'checkbox', sortable: false },
 ];
 
 // Defaults for a standard device programs table

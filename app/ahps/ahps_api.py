@@ -317,7 +317,7 @@ class AHPSRequest:
         return response
 
 
-    def define_device(self, device_name, device_location, device_type, device_address, device_selected):
+    def define_device(self, device_name, device_location, device_mfg, device_address, device_selected):
         """
         Define (create) a new device
         :param device_name:
@@ -330,7 +330,7 @@ class AHPSRequest:
         req = AHPSRequest.create_request("DefineDevice")
         req["args"]["device-name"] = device_name
         req["args"]["device-location"] = device_location
-        req["args"]["device-type"] = device_type
+        req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
         req["args"]["device-selected"] = device_selected
         response = self.send_command(req)

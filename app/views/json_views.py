@@ -407,12 +407,12 @@ def define_device():
     # data: { 'state': new_state } --> request.form['state']
     name = request.form['name']
     location = request.form['location']
-    device_type = request.form['type']
+    device_mfg = request.form['mfg']
     address = request.form['address']
     selected = normalize_boolean(request.form["selected"])
     api_req = AHPSRequest()
 
-    r = api_req.define_device(name, location, device_type, address, selected)
+    r = api_req.define_device(name, location, device_mfg, address, selected)
 
     # We are obligated to send a json response
     if r:
