@@ -381,6 +381,18 @@ class AHPSRequest:
         return response
 
 
+    def delete_program(self, program_id):
+        """
+        Delete a program by its ID
+        :param program_id:
+        :return:
+        """
+        req = AHPSRequest.create_request("DeleteProgram")
+        req["args"]["program-id"] = program_id
+        response = self.send_command(req)
+        return response
+
+
     def get_programs_for_device_id(self, device_id):
         """
         Query for all programs for a given device id

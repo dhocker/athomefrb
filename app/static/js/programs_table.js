@@ -75,8 +75,9 @@ export class ProgramsTable extends BaseTable {
       this.setState({
         okCancelShow: true,
         okCancelTitle: "Remove Program?",
-        okCancelSubtitle: "",
-        okCancelText: `Confirm removal of program id=${rows[row_index].id} name=${rows[row_index].name}`
+        okCancelSubtitle: `Confirm removal of program: ${rows[row_index].name}`,
+        okCancelText: "Be aware that removing this program will also remove all program assignments of this " +
+          "program to a device. That is every use of this program will be removed."
       });
     };
 
@@ -93,9 +94,8 @@ export class ProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          const { match: { params } } = $this.props;
-          // Reload the programs for the current device
-          const url = `/devices/${params.id}/programs`;
+          // Reload all programs
+          const url = `/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {

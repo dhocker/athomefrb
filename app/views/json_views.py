@@ -148,6 +148,26 @@ def get_all_programs():
     return response
 
 
+@app.route('/programs/<id>', methods=['DELETE'])
+def delete_program(id):
+    """
+    Delete a program
+    :param roomid:
+    :return:
+    """
+    api_req = AHPSRequest()
+
+    r = api_req.delete_program(id)
+    # r = {"message": "Success"}
+
+    # We are obligated to send a json response
+    if r:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/devices/<id>/programs", methods=['GET'])
 def get_device_programs(id):
     """
