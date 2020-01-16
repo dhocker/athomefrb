@@ -30,6 +30,9 @@ function Header() {
           <IndexLinkContainer to="/programs" className="nav-link">
             <NavItem className="nav-item">Programs</NavItem>
           </IndexLinkContainer>
+          <IndexLinkContainer to="/groups" className="nav-link">
+            <NavItem className="nav-item">Groups</NavItem>
+          </IndexLinkContainer>
           <LinkContainer to="/about" className="nav-link">
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>

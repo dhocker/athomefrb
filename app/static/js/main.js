@@ -23,6 +23,7 @@ import { DeviceProgram } from './device_program';
 import { NewProgram } from './new_program';
 import { ProgramsTable} from './programs_table';
 import { AvailableProgramsTable } from "./available_programs";
+import { ActionGroups } from "./action_groups";
 import About from './about';
 import { VersionComponent } from './version_component';
 
@@ -57,11 +58,13 @@ function Main() {
         <Route path="/deviceprograms/:id" component={DeviceProgramsTable} />
         <Route path="/editprogram/:id" component={DeviceProgram} />
         <Route path="/device/:id/newprogram" component={NewProgram} />
+        <Route path="/groupdevices/:id" component={NotImplemented} />
+        <Route path="/groups" exact component={ActionGroups} />
       </Switch>
       <footer className="page-footer font-small blue">
         <div className="container-fluid text-right">
           <p className="mb-0"><small>At Home Control <VersionComponent/></small></p>
-          <p><small>Copyright &copy; 2019, 2020 by Dave Hocker</small></p>
+          <p><small>Copyright &copy; 2014, 2020 by Dave Hocker</small></p>
         </div>
       </footer>
     </div>

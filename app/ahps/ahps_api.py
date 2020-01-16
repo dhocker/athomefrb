@@ -459,3 +459,38 @@ class AHPSRequest:
         req["args"]["program-id"] = program_id
         response = self.send_command(req)
         return response
+
+
+    def get_all_action_groups(self):
+        """
+        Query for all action groups
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryActionGroups")
+        response = self.send_command(req)
+        return response
+
+
+    def group_on(self, group_id):
+        """
+        Send group on command
+        :param group_id:
+        :return:
+        """
+        data = AHPSRequest.create_request("GroupOn")
+        data["args"]["group-id"] = group_id
+
+        return self.send_command(data)
+
+
+    def group_off(self, group_id):
+        """
+        Send group off command
+        :param address:
+        :param dim_amount:
+        :return:
+        """
+        data = AHPSRequest.create_request("GroupOff")
+        data["args"]["group-id"] = group_id
+
+        return self.send_command(data)

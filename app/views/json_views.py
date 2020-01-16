@@ -462,6 +462,53 @@ def delete_device(id):
     return response
 
 
+@app.route("/actiongroups", methods=['GET'])
+def get_action_groups():
+    api_req = AHPSRequest()
+    res = api_req.get_all_action_groups()
+    if res and "groups" in res.keys():
+        return jsonify({"data": res["groups"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
+@app.route('/actiongroups/<group_id>/state', methods=['PUT'])
+def set_groups_state(group_id):
+    """
+    Change state of all devices in group to on or off
+    :param groupid:
+    :return:
+    """
+    # NOTE
+    # The jQuery $.ajax call sends arguments as the data property
+    # in the initiating call. The arguments show up in the
+    # request.form property provided by Flask. So,
+    # data: { 'state': new_state } --> request.form['state']
+    arg = request.form['state']
+    api_req = AHPSRequest()
+    if arg == "on":
+        res = api_req.group_on(group_id)
+    elif arg == "off":
+        res = api_req.group_off(group_id)
+    else:
+        # Return an error
+        res = None
+
+    # We are obligated to send a json response
+    if res:
+        resp = jsonify(res)
+        if res["result-code"]:
+            resp.status_code = 500
+        else:
+            resp.status_code = 200
+        return resp
+
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/location', methods=['GET'])
 def get_location():
     """
