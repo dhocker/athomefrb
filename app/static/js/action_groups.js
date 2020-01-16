@@ -161,7 +161,7 @@ const actionGroupsColumns = [
 ActionGroups.defaultProps = {
     cols: actionGroupsColumns,
     default_sort_column: 0,
-    title: "All Groups",
+    title: "All Action Groups",
     class: "table table-striped table-condensed",
     bordered: true,
     striped: true,

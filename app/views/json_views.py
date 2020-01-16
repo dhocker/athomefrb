@@ -473,6 +473,28 @@ def get_action_groups():
     return response
 
 
+@app.route("/actiongroups/<group_id>", methods=['GET'])
+def get_action_group(group_id):
+    api_req = AHPSRequest()
+    res = api_req.get_action_group(group_id)
+    if res and "group" in res.keys():
+        return jsonify({"data": res["group"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
+@app.route("/actiongroups/<group_id>/devices", methods=['GET'])
+def get_action_group_devices(group_id):
+    api_req = AHPSRequest()
+    res = api_req.get_action_group_devices(group_id)
+    if res and "devices" in res.keys():
+        return jsonify({"data": res["devices"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/actiongroups/<group_id>/state', methods=['PUT'])
 def set_groups_state(group_id):
     """

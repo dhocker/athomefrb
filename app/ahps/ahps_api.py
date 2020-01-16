@@ -471,6 +471,28 @@ class AHPSRequest:
         return response
 
 
+    def get_action_group(self, group_id):
+        """
+        Query for an action group
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryActionGroup")
+        req["args"]["group-id"] = group_id
+        response = self.send_command(req)
+        return response
+
+
+    def get_action_group_devices(self, group_id):
+        """
+        Query for all devices in an action group
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryActionGroupDevices")
+        req["args"]["group-id"] = group_id
+        response = self.send_command(req)
+        return response
+
+
     def group_on(self, group_id):
         """
         Send group on command
