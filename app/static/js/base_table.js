@@ -27,7 +27,6 @@ import { BaseComponent } from './base_component';
 */
 
 const SORT_ASC = 1;
-const SORT_DESC = -1;
 const SORT_INVERT = -1;
 
 export class BaseTable extends BaseComponent {
