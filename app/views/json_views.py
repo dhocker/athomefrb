@@ -484,6 +484,31 @@ def get_action_group(group_id):
     return response
 
 
+@app.route('/actiongroups/<id>', methods=['PUT'])
+def save_action_group(id):
+    """
+    Save an edited action group
+    :param roomid:
+    :return:
+    """
+    group = {
+        "group-id": id,
+        "group-name": request.form['name']
+    }
+
+    api_req = AHPSRequest()
+
+    r = api_req.update_action_group(group)
+    if r:
+        logger.debug("Update action group: %s", json.dumps(group, indent=4))
+
+        # We are obligated to send a json response
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/actiongroups/<group_id>/devices", methods=['GET'])
 def get_action_group_devices(group_id):
     api_req = AHPSRequest()

@@ -46,7 +46,7 @@ export class ActionGroups extends BaseTable {
           <td>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.groupOn.bind(this, row_index)}>On</Button>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.groupOff.bind(this, row_index)}>Off</Button>
-            <LinkContainer to={"/editgroup/" + String(row.id)}>
+            <LinkContainer to={"/editactiongroup/" + String(row.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Edit</Button>
             </LinkContainer>
             <LinkContainer to={"/groupdevices/" + String(row.id)}>

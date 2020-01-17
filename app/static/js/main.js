@@ -25,6 +25,7 @@ import { ProgramsTable} from './programs_table';
 import { AvailableProgramsTable } from "./available_programs";
 import { ActionGroups } from "./action_groups";
 import { ActionGroupDevices } from "./action_group_devices";
+import { EditActionGroupForm } from "./edit_action_group";
 import About from './about';
 import { VersionComponent } from './version_component';
 
@@ -61,6 +62,7 @@ function Main() {
         <Route path="/device/:id/newprogram" component={NewProgram} />
         <Route path="/groupdevices/:id" component={ActionGroupDevices} />
         <Route path="/groups" exact component={ActionGroups} />
+        <Route path="/editactiongroup/:groupid" component={EditActionGroupForm} />
       </Switch>
       <footer className="page-footer font-small blue">
         <div className="container-fluid text-right">

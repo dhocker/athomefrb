@@ -482,6 +482,13 @@ class AHPSRequest:
         return response
 
 
+    def update_action_group(self, group):
+        req = AHPSRequest.create_request("UpdateActionGroup")
+        req["args"] = group
+        response = self.send_command(req)
+        return response
+
+
     def get_action_group_devices(self, group_id):
         """
         Query for all devices in an action group
