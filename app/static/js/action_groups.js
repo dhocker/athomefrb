@@ -62,10 +62,9 @@ export class ActionGroups extends BaseTable {
     globalActions() {
         // Use Link or button depending on required action
         // This still doesn't work right
-        const { match: { params } } = this.props;
         return (
           <div>
-            <LinkContainer to={"/actiongroups/" + String(params.id) + "/newgroup"}>
+            <LinkContainer to={"/newactiongroup"}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Group</Button>
             </LinkContainer>
           </div>

@@ -482,6 +482,18 @@ class AHPSRequest:
         return response
 
 
+    def define_action_group(self, group_name):
+        """
+        Define (create) a new device
+        :param group_name:
+        :return:
+        """
+        req = AHPSRequest.create_request("DefineActionGroup")
+        req["args"]["group-name"] = group_name
+        response = self.send_command(req)
+        return response
+
+
     def update_action_group(self, group):
         req = AHPSRequest.create_request("UpdateActionGroup")
         req["args"] = group

@@ -473,6 +473,31 @@ def get_action_groups():
     return response
 
 
+@app.route('/actiongroups', methods=['POST'])
+def define_action_group():
+    """
+    Save an new action group definition
+    :param roomid:
+    :return:
+    """
+    # NOTE
+    # The jQuery $.ajax call sends arguments as the data property
+    # in the initiating call. The arguments show up in the
+    # request.form property provided by Flask. So,
+    # data: { 'state': new_state } --> request.form['state']
+    name = request.form['name']
+    api_req = AHPSRequest()
+
+    r = api_req.define_action_group(name)
+
+    # We are obligated to send a json response
+    if r and r["result-code"] == 0:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/actiongroups/<group_id>", methods=['GET'])
 def get_action_group(group_id):
     api_req = AHPSRequest()
