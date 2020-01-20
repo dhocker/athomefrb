@@ -498,6 +498,17 @@ def define_action_group():
     return response
 
 
+@app.route("/actiongroups/<group_id>", methods=['DELETE'])
+def delete_action_group(group_id):
+    api_req = AHPSRequest()
+    res = api_req.delete_action_group(group_id)
+    if res:
+        return jsonify(res)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/actiongroups/<group_id>", methods=['GET'])
 def get_action_group(group_id):
     api_req = AHPSRequest()

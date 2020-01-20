@@ -494,6 +494,18 @@ class AHPSRequest:
         return response
 
 
+    def delete_action_group(self, group_id):
+        """
+        Delete a device group
+        :param group_id:
+        :return:
+        """
+        req = AHPSRequest.create_request("DeleteActionGroup")
+        req["args"]["group-id"] = group_id
+        response = self.send_command(req)
+        return response
+
+
     def update_action_group(self, group):
         req = AHPSRequest.create_request("UpdateActionGroup")
         req["args"] = group

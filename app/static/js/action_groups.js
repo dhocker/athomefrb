@@ -27,7 +27,7 @@ export class ActionGroups extends BaseTable {
         super(props);
 
         this.globalActions = this.globalActions.bind(this);
-        this.onProgramRemove = this.onProgramRemove.bind(this);
+        this.onGroupRemove = this.onGroupRemove.bind(this);
         this.onDialogOK = this.onDialogOK.bind(this);
         this.onDialogCancel = this.onDialogCancel.bind(this);
     }
@@ -52,7 +52,7 @@ export class ActionGroups extends BaseTable {
             <LinkContainer to={"/groupdevices/" + String(row.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Devices</Button>
             </LinkContainer>
-            <Button className="btn btn-danger btn-sm btn-extra btn-extra-vert" onClick={this.onProgramRemove.bind(this, row_index)}>Remove</Button>
+            <Button className="btn btn-danger btn-sm btn-extra btn-extra-vert" onClick={this.onGroupRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
     };
@@ -71,17 +71,17 @@ export class ActionGroups extends BaseTable {
         );
     }
 
-    // Remove program
-    onProgramRemove(row_index, event) {
+    // Remove group
+    onGroupRemove(row_index, event) {
       const rows = this.state.rows;
       this.remove_row_index = row_index;
 
       this.setState({
         okCancelShow: true,
-        okCancelTitle: "Remove Program?",
-        okCancelSubtitle: `Confirm removal of program: ${rows[row_index].name}`,
-        okCancelText: "Be aware that removing this program will also remove all program assignments of this " +
-          "program to a device. That is every use of this program will be removed."
+        okCancelTitle: "Remove Group?",
+        okCancelSubtitle: `Confirm removal of group: ${rows[row_index].name}`,
+        okCancelText: "Be aware that removing this group will also remove all devices from the group. " +
+          "There are no other side effects to this action."
       });
     };
 
