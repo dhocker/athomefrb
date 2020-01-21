@@ -27,12 +27,16 @@ import { ActionGroups } from "./action_groups";
 import { ActionGroupDevices } from "./action_group_devices";
 import { EditActionGroupForm } from "./edit_action_group";
 import { NewActionGroupForm } from "./new_action_group";
+import { AvailableGroupDevices } from "./available_group_devices";
 import About from './about';
 import { VersionComponent } from './version_component';
 
 export function NotImplemented() {
   return (
-    <h2>Not Implemented</h2>
+    <div>
+      <h2>Not Implemented</h2>
+      <p>ID: {arguments[0].match.params.id}</p>
+    </div>
   );
 }
 
@@ -65,6 +69,7 @@ function Main() {
         <Route path="/groups" exact component={ActionGroups} />
         <Route path="/editactiongroup/:groupid" component={EditActionGroupForm} />
         <Route path="/newactiongroup" exact component={NewActionGroupForm} />
+        <Route path="/availabledevices/group/:id" component={AvailableGroupDevices} />
       </Switch>
       <footer className="page-footer font-small blue">
         <div className="container-fluid text-right">

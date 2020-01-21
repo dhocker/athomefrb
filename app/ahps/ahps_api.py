@@ -524,6 +524,25 @@ class AHPSRequest:
         return response
 
 
+    def get_available_devices_for_group_id(self, group_id):
+        """
+        Query for all devices available for assignment to a given group id
+        :param device_id:
+        :return:
+        """
+        req = AHPSRequest.create_request("QueryAvailableGroupDevices")
+        req["args"]["group-id"] = group_id
+        response = self.send_command(req)
+        return response
+
+    def assign_device_to_group(self, group_id, device_id):
+        req = AHPSRequest.create_request("AssignDevice")
+        req["args"]["group-id"] = group_id
+        req["args"]["device-id"] = device_id
+        response = self.send_command(req)
+        return response
+
+
     def group_on(self, group_id):
         """
         Send group on command

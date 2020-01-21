@@ -556,6 +556,37 @@ def get_action_group_devices(group_id):
     return response
 
 
+@app.route("/availabledevices/group/<id>", methods=['GET'])
+def get_available_group_devices(id):
+    """
+    Get all devices available for assignment to a given group ID
+    :param id: The group ID for avialable devices
+    :return:
+    """
+    api_req = AHPSRequest()
+    res = api_req.get_available_devices_for_group_id(id)
+
+    # Build response with program summary
+    if res and "devices" in res.keys():
+        return jsonify({"data": res["devices"]})
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
+@app.route("/groupdevices/<group_id>/<device_id>", methods=['POST'])
+def add_device_to_group(group_id, device_id):
+    api_req = AHPSRequest()
+
+    r = api_req.assign_device_to_group(group_id, device_id)
+
+    if r and r["result-code"] == 0:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/actiongroups/<group_id>/state', methods=['PUT'])
 def set_groups_state(group_id):
     """
