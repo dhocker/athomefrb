@@ -221,26 +221,6 @@ class AHPSRequest:
         return self.send_command(data)
 
 
-    def selected_devices_on(self):
-        """
-        Send all selected devices on command
-        :return:
-        """
-        data = AHPSRequest.create_request("AllSelectedDevicesOn")
-
-        return self.send_command(data)
-
-
-    def selected_devices_off(self):
-        """
-        Send all selected devices on command
-        :return:
-        """
-        data = AHPSRequest.create_request("AllSelectedDevicesOff")
-
-        return self.send_command(data)
-
-
     def device_all_units_off(self):
         """
         Send all units off command
@@ -317,14 +297,13 @@ class AHPSRequest:
         return response
 
 
-    def define_device(self, device_name, device_location, device_mfg, device_address, device_selected):
+    def define_device(self, device_name, device_location, device_mfg, device_address):
         """
         Define (create) a new device
         :param device_name:
         :param device_location:
         :param device_type:
         :param device_address:
-        :param device_selected:
         :return:
         """
         req = AHPSRequest.create_request("DefineDevice")
@@ -332,12 +311,11 @@ class AHPSRequest:
         req["args"]["device-location"] = device_location
         req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
-        req["args"]["device-selected"] = device_selected
         response = self.send_command(req)
         return response
 
 
-    def update_device(self, device_id, device_name, device_location, device_type, device_address, device_selected):
+    def update_device(self, device_id, device_name, device_location, device_mfg, device_address):
         """
         Update an existing device
         :param device_id:
@@ -345,16 +323,14 @@ class AHPSRequest:
         :param device_location:
         :param device_type:
         :param device_address:
-        :param device_selected:
         :return:
         """
         req = AHPSRequest.create_request("UpdateDevice")
         req["args"]["device-id"] = device_id
         req["args"]["device-name"] = device_name
         req["args"]["device-location"] = device_location
-        req["args"]["device-type"] = device_type
+        req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
-        req["args"]["device-selected"] = device_selected
         response = self.send_command(req)
         return response
 
@@ -564,5 +540,19 @@ class AHPSRequest:
         """
         data = AHPSRequest.create_request("GroupOff")
         data["args"]["group-id"] = group_id
+
+        return self.send_command(data)
+
+
+    def delete_action_group_device(self, group_id, device_id):
+        """
+        Send delete device from action group
+        :param group_id:
+        :param device_id
+        :return:
+        """
+        data = AHPSRequest.create_request("DeleteActionGroupDevice")
+        data["args"]["group-id"] = group_id
+        data["args"]["device-id"] = device_id
 
         return self.send_command(data)

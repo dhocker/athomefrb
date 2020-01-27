@@ -109,9 +109,6 @@ export class EditDeviceForm extends BaseComponent {
       let fieldName = event.target.name;
       let fieldVal = event.target.value;
       switch (fieldName) {
-        case "selected":
-          fieldVal = event.target.checked;
-          break;
         default:
           break;
       }
@@ -320,15 +317,6 @@ export class EditDeviceForm extends BaseComponent {
             </Form.Group>
 
             {this.generateAddressControl()}
-
-            <Form.Group controlId="formGroupDeviceSelected">
-              <Form.Label>Selected</Form.Label>
-              <Form.Check
-                name="selected"
-                checked={!!this.state.device.selected}
-                onChange={this.onControlChange}
-              />
-            </Form.Group>
 
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
               Save

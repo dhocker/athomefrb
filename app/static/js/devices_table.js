@@ -28,9 +28,6 @@ export class DevicesTable extends BaseTable {
     constructor(props) {
         super(props);
 
-        this.saveSelected = this.saveSelected.bind(this);
-        this.selectedOn = this.selectedOn.bind(this);
-        this.selectedOff = this.selectedOff.bind(this);
         this.deviceOn = this.deviceOn.bind(this);
         this.deviceOff = this.deviceOff.bind(this);
         this.deviceRemove = this.onDeviceRemove.bind(this);
@@ -66,47 +63,9 @@ export class DevicesTable extends BaseTable {
             <LinkContainer to="/newdevice">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Device</Button>
             </LinkContainer>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.saveSelected.bind(this)} type="button">Save Selected</Button>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOn.bind(this)} type="button">All Selected On</Button>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.selectedOff.bind(this)} type="button">All Selected Off</Button>
           </div>
         );
     }
-
-    // Save the selected property of all devices
-    saveSelected(event) {
-      // this.showDialogBox("Device Selections Saved", "Success", "The selected device settings have been saved");
-      const url = '/devices';
-      const $this = this;
-
-      $.ajax({
-        method: "PUT",
-        url: url,
-        data: JSON.stringify(this.state.rows),
-        dataType: "json",
-        contentType: "application/json",
-        processData: false,
-        success: function(data, status, xhr) {
-          $this.save_error = false;
-          $this.showDialogBox("Save Selected Settings", data.message, "All Device Records Updated");
-        },
-        error: function(xhr, status, msg) {
-          $this.save_error = true;
-          const response = JSON.parse(xhr.responseText);
-          $this.showDialogBox("Unable to Save Device Records", status, `${msg} ${response.message}`);
-        }
-      });
-    };
-
-    // All selected on
-    selectedOn(event) {
-      this.setSelectedDevicesState("on");
-    };
-
-    // All selected off
-    selectedOff(event) {
-      this.setSelectedDevicesState("off");
-    };
 
     // Device on
     deviceOn(row_index, event) {
@@ -179,26 +138,6 @@ export class DevicesTable extends BaseTable {
         }
       });
     }
-
-    // change selected devices state
-    setSelectedDevicesState(new_state) {
-      const $this = this;
-      const url = `/devices/selected/state`;
-
-      $.ajax({
-        method: "PUT",
-        url: url,
-        data: { 'state': new_state },
-        dataType: "json",
-        success: function(data, status, xhr) {
-          $this.showMessage(`All selected devices turned ${new_state}`);
-        },
-        error: function(xhr, status, msg) {
-          const response = JSON.parse(xhr.responseText);
-          $this.showDialogBox(`All selected devices ${new_state}`, msg, response.message)
-        }
-      });
-    }
 }
 
 DevicesTable.propTypes = {
@@ -213,7 +152,6 @@ const deviceTableColumns = [
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
     { colname: 'mfg', label: 'Mfg', type: 'text', sortable: true },
     { colname: 'address', label: 'Address/UUID', type: 'longtext', rightlen: 12, sortable: true },
-    { colname: 'selected', label: 'Selected', type: 'checkbox', sortable: true },
     { colname: 'id', label: 'ID', type: 'text', sortable: true }
 ];
 

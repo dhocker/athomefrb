@@ -292,32 +292,6 @@ def save_device_program(id):
     return response
 
 
-@app.route('/devices/selected/state', methods=['PUT'])
-def set_selected_devices_state():
-    arg = request.form['state']
-    api_req = AHPSRequest()
-    if arg == "on":
-        res = api_req.selected_devices_on()
-    elif arg == "off":
-        res = api_req.selected_devices_off()
-    else:
-        # Return an error
-        res = None
-
-    # We are obligated to send a json response
-    if res:
-        resp = jsonify(res)
-        if res["result-code"]:
-            resp.status_code = 500
-        else:
-            resp.status_code = 200
-        return resp
-
-    response = jsonify(api_req.last_error)
-    response.status_code = 500
-    return response
-
-
 @app.route('/devices/<id>/state', methods=['PUT'])
 def set_devices_state(id):
     """
@@ -369,12 +343,11 @@ def save_device(id):
     # data: { 'state': new_state } --> request.form['state']
     name = request.form['name']
     location = request.form['location']
-    device_type = request.form['type']
+    device_mfg = request.form['mfg']
     address = request.form['address']
-    selected = normalize_boolean(request.form["selected"])
     api_req = AHPSRequest()
 
-    r = api_req.update_device(id, name, location, device_type, address, selected)
+    r = api_req.update_device(id, name, location, device_mfg, address)
 
     # We are obligated to send a json response
     if r:
@@ -398,8 +371,7 @@ def save_all_devices():
                                   device["name"],
                                   device["location"],
                                   device["type"],
-                                  device["address"],
-                                  normalize_boolean(device["selected"]))
+                                  device["address"])
         if not r:
             response = jsonify(api_req.last_error)
             response.status_code = 500
@@ -429,10 +401,9 @@ def define_device():
     location = request.form['location']
     device_mfg = request.form['mfg']
     address = request.form['address']
-    selected = normalize_boolean(request.form["selected"])
     api_req = AHPSRequest()
 
-    r = api_req.define_device(name, location, device_mfg, address, selected)
+    r = api_req.define_device(name, location, device_mfg, address)
 
     # We are obligated to send a json response
     if r:
@@ -618,6 +589,26 @@ def set_groups_state(group_id):
             resp.status_code = 200
         return resp
 
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
+@app.route('/actiongroups/<group_id>/devices/<device_id>', methods=['DELETE'])
+def delete_action_group_device(group_id, device_id):
+    """
+    Delete a from from an action group
+    :param group_id:
+    :param device_id:
+    :return:
+    """
+    api_req = AHPSRequest()
+
+    r = api_req.delete_action_group_device(group_id, device_id)
+
+    # We are obligated to send a json response
+    if r and r["result-code"] == 0:
+        return jsonify(r)
     response = jsonify(api_req.last_error)
     response.status_code = 500
     return response
