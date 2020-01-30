@@ -55,12 +55,9 @@ export class ProgramsTable extends BaseTable {
 
     // Override to provide global actions at the foot of the table
     globalActions() {
-        // Use Link or button depending on required action
-        // This still doesn't work right
-        const { match: { params } } = this.props;
         return (
           <div>
-            <LinkContainer to={"/device/" + String(params.id) + "/newprogram"}>
+            <LinkContainer to="/device/newprogram">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Program</Button>
             </LinkContainer>
           </div>

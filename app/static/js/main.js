@@ -64,7 +64,7 @@ function Main() {
         <Route path="/about/" component={About} />
         <Route path="/deviceprograms/:id" component={DeviceProgramsTable} />
         <Route path="/editprogram/:id" component={DeviceProgram} />
-        <Route path="/device/:id/newprogram" component={NewProgram} />
+        <Route path="/device/newprogram" component={NewProgram} />
         <Route path="/groupdevices/:id" component={ActionGroupDevices} />
         <Route path="/groups" exact component={ActionGroups} />
         <Route path="/editactiongroup/:groupid" component={EditActionGroupForm} />
