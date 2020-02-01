@@ -29,7 +29,7 @@ import { EditActionGroupForm } from "./edit_action_group";
 import { NewActionGroupForm } from "./new_action_group";
 import { AvailableGroupDevices } from "./available_group_devices";
 import { AvailableGroupProgramsTable} from "./available_group_programs";
-import About from './about';
+import { About } from './about';
 import { VersionComponent } from './version_component';
 
 export function NotImplemented() {
