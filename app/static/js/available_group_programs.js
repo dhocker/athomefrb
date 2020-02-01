@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2020  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import { BaseTable } from './base_table';
 import { Button } from 'react-bootstrap';
 import $ from 'jquery';
 
-export class AvailableProgramsTable extends BaseTable {
+export class AvailableGroupProgramsTable extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -39,13 +39,12 @@ export class AvailableProgramsTable extends BaseTable {
     componentDidMount() {
         const { match: { params } } = this.props;
         // all programs available for assignment to a device
-        const url = `/availableprograms/device/${params.id}`;
         this.setState({
-          title: `${this.props.title} for Device ID ${params.id}`,
+          title: `${this.props.title} for Group ID ${params.groupid}`,
           selected: []
         });
-        this.loadTable(url);
-        this.getDeviceInfo(params.id);
+        this.loadTable("/programs");
+        this.getGroupInfo(params.groupid);
     }
 
     // We need a custom table loader because we are adding
@@ -74,16 +73,16 @@ export class AvailableProgramsTable extends BaseTable {
       });
     }
 
-    getDeviceInfo(device_id) {
+    getGroupInfo(group_id) {
         const notThis = this;
-        const url = `/devices/${String(device_id)}`;
+        const url = `/actiongroups/${String(group_id)}`;
         $.ajax({
           method: "GET",
           url: url,
           success: function (response /* , status */) {
-            const deviceInfo = response.data;
+            const groupInfo = response.data;
             notThis.setState({
-              title: `${notThis.props.title} for Device ${deviceInfo.name} at ${deviceInfo.location}`
+              title: `${notThis.props.title} for Group ${groupInfo.name}`
             });
           },
           error: function(jqxhr, status, msg) {
@@ -105,7 +104,7 @@ export class AvailableProgramsTable extends BaseTable {
         return (
           <div>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.onAddPrograms}>
-              Assign Selected Program(s) to Device
+              Assign Selected Program(s) to Group Devices
             </Button>
           </div>
         );
@@ -127,7 +126,8 @@ export class AvailableProgramsTable extends BaseTable {
           this.showDialogBox("Add Programs", "", "No programs selected");
       }
       else {
-        $.when(...ajax_calls).done(function() {
+        // When all programs are added, notify user
+        $.when(...ajax_calls).then(function() {
           $this.showDialogBox("Programs Added", "", "Selected program(s) added to device", $this.addProgramsClosed);
         })
       }
@@ -141,8 +141,8 @@ export class AvailableProgramsTable extends BaseTable {
     addProgram(row) {
       const { match: { params } } = this.props;
       // params.id is the device for the program assignment
-      // POST - add row.id program to params.id device
-      const url = `/deviceprograms/${params.id}/${row.id}`;
+      // POST - add row.id program to params.groupid group devices
+      const url = `/actiongroupprograms/${params.groupid}/${row.id}`;
       const $this = this;
 
       return $.ajax({
@@ -152,14 +152,10 @@ export class AvailableProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.save_error = false;
-          // $this.showDialogBox("Programs Added", "", "Selected program(s) added to device");
-          // $this.props.history.goBack();
         },
         error: function(xhr, status, msg) {
           $this.save_error = true;
-          $this.pending -= 1;
           const response = xhr.responseText;
-          // $this.showMessage(`Save failed: ${status} ${msg} ${response}`);
           $this.showDialogBox("Unable to add program", status, `${msg} ${response.message}`);
         }
       });
@@ -209,7 +205,7 @@ export class AvailableProgramsTable extends BaseTable {
     }
 }
 
-AvailableProgramsTable.propTypes = {
+AvailableGroupProgramsTable.propTypes = {
     class: PropTypes.string.isRequired,
 };
 
@@ -222,7 +218,7 @@ const programTableColumns = [
 ];
 
 // Defaults for a standard device programs table
-AvailableProgramsTable.defaultProps = {
+AvailableGroupProgramsTable.defaultProps = {
     cols: programTableColumns,
     default_sort_column: 0,
     title: "Available Programs",

@@ -242,6 +242,19 @@ def delete_device_program(device_id, program_id):
     return response
 
 
+@app.route("/actiongroupprograms/<group_id>/<program_id>", methods=['POST'])
+def add_program_to_group_devices(group_id, program_id):
+    api_req = AHPSRequest()
+
+    r = api_req.assign_program_to_group_devices(group_id, program_id)
+
+    if r and r["result-code"] == 0:
+        return jsonify(r)
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route("/programs/<id>", methods=['GET'])
 def get_device_program(id):
     """

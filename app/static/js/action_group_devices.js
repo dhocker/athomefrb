@@ -85,6 +85,9 @@ export class ActionGroupDevices extends BaseTable {
             <LinkContainer to={"/availabledevices/group/" + String(params.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Devices to Group</Button>
             </LinkContainer>
+            <LinkContainer to={"/availableprograms/group/" + String(params.id)}>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Programs to Group Devices</Button>
+            </LinkContainer>
           </div>
         );
     }

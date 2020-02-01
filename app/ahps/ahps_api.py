@@ -399,6 +399,13 @@ class AHPSRequest:
         response = self.send_command(req)
         return response
 
+    def assign_program_to_group_devices(self, group_id, program_id):
+        req = AHPSRequest.create_request("AssignProgramToGroup")
+        req["args"]["group-id"] = group_id
+        req["args"]["program-id"] = program_id
+        response = self.send_command(req)
+        return response
+
 
     def get_program_by_id(self, program_id):
         """

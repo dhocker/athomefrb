@@ -28,14 +28,26 @@ import { ActionGroupDevices } from "./action_group_devices";
 import { EditActionGroupForm } from "./edit_action_group";
 import { NewActionGroupForm } from "./new_action_group";
 import { AvailableGroupDevices } from "./available_group_devices";
+import { AvailableGroupProgramsTable} from "./available_group_programs";
 import About from './about';
 import { VersionComponent } from './version_component';
 
 export function NotImplemented() {
+  let idkey = "";
+  let id = "";
+  if (arguments[0].match.params.id) {
+    idkey = "ID";
+    id = arguments[0].match.params.id;
+  }
+  else if (arguments[0].match.params.groupid) {
+    idkey = "Group ID";
+    id = arguments[0].match.params.groupid;
+  }
+
   return (
     <div>
       <h2>Not Implemented</h2>
-      <p>ID: {arguments[0].match.params.id}</p>
+      <p>{idkey}: {id}</p>
     </div>
   );
 }
@@ -70,6 +82,7 @@ function Main() {
         <Route path="/editactiongroup/:groupid" component={EditActionGroupForm} />
         <Route path="/newactiongroup" exact component={NewActionGroupForm} />
         <Route path="/availabledevices/group/:id" component={AvailableGroupDevices} />
+        <Route path="/availableprograms/group/:groupid" component={AvailableGroupProgramsTable} />
       </Switch>
       <footer className="page-footer font-small blue">
         <div className="container-fluid text-right">
