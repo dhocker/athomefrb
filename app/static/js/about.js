@@ -22,7 +22,7 @@ export class About extends React.Component {
     return (
       <div className="card my-5">
         <div className="card-body">
-          <h5 className="card-title">About AtHome Control</h5>
+          <h2 className="card-title">About AtHome Control</h2>
           <p className="card-text">
             This is the newest iteration of AtHome Control (AtHomeFRB) developed using
             Python 3, Flask, React, Booststrap and Webpack. Essentially, AtHome Control is
@@ -34,28 +34,31 @@ export class About extends React.Component {
               className="card-link-x"
               href="https://www.smarthome.com/sc-what-is-x10-home-automation"
             >
-              &nbsp;X10&nbsp;
+              X10
             </a>
-            ,&nbsp;
+            ,
             <a
               className="card-link-x"
               href="https://www.tp-link.com/us/kasa-smart/kasa.html"
             >
               TPLink/Kasa
             </a>
-            &nbsp;and&nbsp;
+            &nbsp;and
             <a
               className="card-link-x"
               href="https://www.meross.com/"
             >
               Meross
             </a>
-            .&nbsp;
+            .
             X10 devices require an X10 power line controller to
-            drive them, while TPLink/Kasa and Meross devices are WiFi based and do not require
-            any controller. If you are just starting with home control, the TPLink/Kasa or Meross
+            drive them. Also, a two-phase bridge is usually required to
+            propagate X10 signals onto both sides of typical home wiring.
+            TPLink/Kasa and Meross devices are WiFi based and do not require
+            any controller. They do require a smart phone or tablet for setup.
+            If you are just starting with home control, the TPLink/Kasa or Meross
             devices are probably the best choice. X10 is quite old and device
-            modules get harder to find and more expensive as time passes.
+            modules get harder to find and become more expensive as time passes.
           </p>
           <p className="card-text">
             Find out more about AtHome Control at
