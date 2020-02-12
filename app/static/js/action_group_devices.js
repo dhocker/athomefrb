@@ -69,6 +69,8 @@ export class ActionGroupDevices extends BaseTable {
     getActions(row_index, row) {
         return (
           <td>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOn.bind(this, row_index)}>On</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOff.bind(this, row_index)}>Off</Button>
             <Button className="btn btn-danger btn-sm btn-extra btn-extra-vert" onClick={this.onDeviceRemove.bind(this, row_index)}>Remove</Button>
           </td>
         );
@@ -90,6 +92,37 @@ export class ActionGroupDevices extends BaseTable {
             </LinkContainer>
           </div>
         );
+    }
+
+    // Device on
+    deviceOn(row_index, event) {
+      this.setDeviceState(row_index, "on");
+    };
+
+    // Device off
+    deviceOff(row_index, event) {
+      this.setDeviceState(row_index, "off");
+    };
+
+    // change device state
+    setDeviceState(row_index, new_state) {
+      const $this = this;
+      const rows = this.state.rows;
+      const url = `/devices/${rows[row_index].id}/state`;
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: { 'state': new_state },
+        dataType: "json",
+        success: function(data, status, xhr) {
+          $this.showMessage(`Device ${rows[row_index]["name"]} turned ${new_state}`);
+        },
+        error: function(xhr, status, msg) {
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox(`Device ${rows[row_index]["name"]} ${new_state}`, msg, response.message)
+        }
+      });
     }
 
     // Remove device from group
