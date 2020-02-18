@@ -29,9 +29,9 @@ export class NewDevice extends EditDeviceForm {
             device: {
               name: "",
               location: "",
-              type: "x10",
+              mfg: "x10",
               address: "",
-              selected: false
+              channel: 0
             },
             modalShow: false,
             modalTitle: "",

@@ -358,9 +358,13 @@ def save_device(id):
     location = request.form['location']
     device_mfg = request.form['mfg']
     address = request.form['address']
+    channel = 0
+    if "channel" in request.form.keys():
+        channel = int(request.form["channel"])
+
     api_req = AHPSRequest()
 
-    r = api_req.update_device(id, name, location, device_mfg, address)
+    r = api_req.update_device(id, name, location, device_mfg, address, channel)
 
     # We are obligated to send a json response
     if r:
@@ -414,9 +418,13 @@ def define_device():
     location = request.form['location']
     device_mfg = request.form['mfg']
     address = request.form['address']
+    channel = 0
+    if "channel" in request.form.keys():
+        channel = int(request.form["channel"])
+
     api_req = AHPSRequest()
 
-    r = api_req.define_device(name, location, device_mfg, address)
+    r = api_req.define_device(name, location, device_mfg, address, channel)
 
     # We are obligated to send a json response
     if r:

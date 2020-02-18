@@ -297,7 +297,7 @@ class AHPSRequest:
         return response
 
 
-    def define_device(self, device_name, device_location, device_mfg, device_address):
+    def define_device(self, device_name, device_location, device_mfg, device_address, device_channel):
         """
         Define (create) a new device
         :param device_name:
@@ -311,11 +311,12 @@ class AHPSRequest:
         req["args"]["device-location"] = device_location
         req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
+        req["args"]["device-channel"] = device_channel
         response = self.send_command(req)
         return response
 
 
-    def update_device(self, device_id, device_name, device_location, device_mfg, device_address):
+    def update_device(self, device_id, device_name, device_location, device_mfg, device_address, device_channel):
         """
         Update an existing device
         :param device_id:
@@ -331,6 +332,7 @@ class AHPSRequest:
         req["args"]["device-location"] = device_location
         req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
+        req["args"]["device-channel"] = device_channel
         response = self.send_command(req)
         return response
 

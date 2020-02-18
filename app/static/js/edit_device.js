@@ -31,6 +31,7 @@ export class EditDeviceForm extends BaseComponent {
             device: {
               mfg: "x10",
               address: "",
+              channel: 0,
             },
             tplink_list: [],
             meross_list: [],
@@ -49,6 +50,8 @@ export class EditDeviceForm extends BaseComponent {
         this.generateTitle = this.generateTitle.bind(this);
         this.generateAddressControl = this.generateAddressControl.bind(this);
         this.onDeviceAddressSelect = this.onDeviceAddressSelect.bind(this);
+        this.generateChannelControl = this.generateChannelControl.bind(this);
+        this.onChannelSelect = this.onChannelSelect.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -197,22 +200,23 @@ export class EditDeviceForm extends BaseComponent {
           name={device_list[address]}
           onSelect={this.onDeviceAddressSelect}
           >
-          {device_list[address].mfg} &lt;{device_list[address].label} ({address})&gt;
+          {device_list[address].mfg} &lt;{device_list[address].label} {device_list[address].model} ({address})&gt;
         </Dropdown.Item>;
 
         available_devices.push(di);
       };
 
       // Manufacture a title for the drop down control
-      let title = ""
+      let address_title = ""
       if ($this.state.device.address) {
         if ($this.state.device.address in device_list) {
-          title = device_list[$this.state.device.address].type + " <" +
-            device_list[$this.state.device.address].label +
+          address_title = device_list[$this.state.device.address].type + " <" +
+            device_list[$this.state.device.address].label + " " +
+            device_list[$this.state.device.address].model +
             " (" + $this.state.device.address + ")>";
         }
         else {
-          title = "Name Unknown (" + this.state.device.address + ")";
+          address_title = "Name Unknown (" + this.state.device.address + ")";
         }
       }
 
@@ -221,7 +225,7 @@ export class EditDeviceForm extends BaseComponent {
           <Form.Label>Device Address</Form.Label>
           <DropdownButton
             id="device-address"
-            title={title}
+            title={address_title}
           >
             {available_devices}
           </DropdownButton>
@@ -232,6 +236,68 @@ export class EditDeviceForm extends BaseComponent {
     onDeviceAddressSelect(key, event) {
       let deviceAddress = key;
       this.setState({device: {...this.state.device, "address": deviceAddress}});
+    }
+
+    generateChannelControl() {
+      // A device must have been picked
+      if (this.state.device.address === "") {
+        return "";
+      }
+
+      // Pick the device list for the selected mfg
+      let device_list = {};
+      switch (this.state.device.mfg) {
+        case "x10":
+          return "";
+        case "tplink":
+          device_list = this.state.tplink_list;
+          break;
+        case "meross":
+          device_list = this.state.meross_list;
+          break;
+        default:
+      }
+
+      // Device list must be loaded
+      if (Object.keys(device_list).length === 0) {
+        return "";
+      }
+
+      // And, the selected device address must be multi-channel
+      if (device_list[this.state.device.address].channels === 1) {
+        return "";
+      }
+
+      let available_channels = [];
+      for (var c = 0; c < device_list[this.state.device.address].channels; c++) {
+        const di = <Dropdown.Item
+          eventKey={c}
+          key={c}
+          name={"channel-" + c}
+          onSelect={this.onChannelSelect}
+          >
+          {c}
+        </Dropdown.Item>;
+
+        available_channels.push(di);
+      };
+
+      return (
+        <Form.Group controlId="formGroupChannel">
+          <Form.Label>Channel</Form.Label>
+          <DropdownButton
+            id="device-channel"
+            title={String(this.state.device.channel)}
+          >
+            {available_channels}
+          </DropdownButton>
+        </Form.Group>
+      );
+    }
+
+    onChannelSelect(key, event) {
+      let deviceChannel = key;
+      this.setState({device: {...this.state.device, "channel": deviceChannel}});
     }
 
     validate(device) {
@@ -264,6 +330,9 @@ export class EditDeviceForm extends BaseComponent {
           if (!/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(addr)) {
             return "Invalid IP address";
           }
+          if (device.channel >= device.channels) {
+            return "Channel is out of range"
+          }
           break;
         case "meross":
           // The Meross UUID looks like a GUID without hyphens, but it fails a real GUID test
@@ -273,6 +342,9 @@ export class EditDeviceForm extends BaseComponent {
           }
           if (!(/^[0-9a-f]{32}$/.test(addr))) {
             return "Invalid UUID for Meross device";
+          }
+          if (device.channel >= device.channels) {
+            return "Channel is out of range"
           }
           break;
         default:
@@ -317,6 +389,7 @@ export class EditDeviceForm extends BaseComponent {
             </Form.Group>
 
             {this.generateAddressControl()}
+            {this.generateChannelControl()}
 
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
               Save
