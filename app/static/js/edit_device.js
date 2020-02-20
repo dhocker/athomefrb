@@ -42,6 +42,8 @@ export class EditDeviceForm extends BaseComponent {
           }
         };
 
+        this.active_device_list = [];
+
         this.onControlChange = this.onControlChange.bind(this);
         this.onDeviceMfgClick = this.onDeviceMfgClick.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
@@ -126,6 +128,23 @@ export class EditDeviceForm extends BaseComponent {
       }
       else {
         this.setState({device: {...this.state.device, "mfg": deviceMfg}});
+      }
+
+      // Note that mfg is manufacturer (X10, TPLink, Meross)
+      // and type is Plug or Bulb
+      // Choose the active device list based on the mfg type
+      switch (deviceMfg) {
+        case "x10":
+          this.active_device_list = [];
+          break;
+        case "tplink":
+          this.active_device_list = this.state.tplink_list;
+          break;
+        case "meross":
+          this.active_device_list = this.state.meross_list;
+          break;
+        default:
+          break;
       }
     }
 
@@ -245,31 +264,25 @@ export class EditDeviceForm extends BaseComponent {
       }
 
       // Pick the device list for the selected mfg
-      let device_list = {};
       switch (this.state.device.mfg) {
         case "x10":
           return "";
-        case "tplink":
-          device_list = this.state.tplink_list;
-          break;
-        case "meross":
-          device_list = this.state.meross_list;
-          break;
         default:
+          break;
       }
 
       // Device list must be loaded
-      if (Object.keys(device_list).length === 0) {
+      if (Object.keys(this.active_device_list).length === 0) {
         return "";
       }
 
       // And, the selected device address must be multi-channel
-      if (device_list[this.state.device.address].channels === 1) {
+      if (this.active_device_list[this.state.device.address].channels === 1) {
         return "";
       }
 
       let available_channels = [];
-      for (var c = 0; c < device_list[this.state.device.address].channels; c++) {
+      for (var c = 0; c < this.active_device_list[this.state.device.address].channels; c++) {
         const di = <Dropdown.Item
           eventKey={c}
           key={c}
