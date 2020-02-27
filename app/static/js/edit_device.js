@@ -16,7 +16,7 @@
 */
 
 import React from "react";
-import {Form, Button, Dropdown, DropdownButton} from "react-bootstrap";
+import {Form, Button, Dropdown, DropdownButton, Row, Col, Card} from "react-bootstrap";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
 import {ChromePicker} from "react-color";
@@ -329,23 +329,29 @@ export class EditDeviceForm extends BaseComponent {
       }
 
       return (
-        <Form.Group controlId="formGroupColorBrightness">
-          <Form.Label>Color</Form.Label>
-          <ChromePicker
-            color={this.state.device.color}
-            onChangeComplete={this.onColorChanged}
-          />
+        <Col md="auto">
+          <Card>
+            <Card.Body>
+              <Form.Group controlId="formGroupColorBrightness">
+                <Form.Label>Color</Form.Label>
+                <ChromePicker
+                  color={this.state.device.color}
+                  onChangeComplete={this.onColorChanged}
+                />
 
-          <Form.Label>Brightness</Form.Label>
-          <Form.Control
-            as="input"
-            type="text"
-            name="brightness"
-            placeholder="Brightness"
-            value={this.state.device.brightness}
-            onChange={this.onControlChange}
-          />
-        </Form.Group>
+                <Form.Label>Brightness</Form.Label>
+                <Form.Control
+                  as="input"
+                  type="text"
+                  name="brightness"
+                  placeholder="Brightness"
+                  value={this.state.device.brightness}
+                  onChange={this.onControlChange}
+                />
+              </Form.Group>
+            </Card.Body>
+          </Card>
+        </Col>
       )
     }
 
@@ -417,45 +423,58 @@ export class EditDeviceForm extends BaseComponent {
           {this.generateTitle()}
           {this.generateMessage()}
           <Form>
-            <Form.Group controlId="formGroupDeviceName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                as="input"
-                type="text"
-                name="name"
-                placeholder="Name"
-                defaultValue={this.state.device.name}
-                onChange={this.onControlChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formGroupDeviceLocation">
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                defaultValue={this.state.device.location}
-                onChange={this.onControlChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formGroupDeviceMfg">
-              <Form.Label>Manufacturer</Form.Label>
-              <DropdownButton id="device-mfg" title={this.state.device.mfg}>
-                <Dropdown.Item name="x10" onClick={this.onDeviceMfgClick}>x10</Dropdown.Item>
-                <Dropdown.Item name="tplink" onClick={this.onDeviceMfgClick}>tplink</Dropdown.Item>
-                <Dropdown.Item name="meross" onClick={this.onDeviceMfgClick}>meross</Dropdown.Item>
-              </DropdownButton>
-            </Form.Group>
+            <Row>
+              <Col md="auto">
+                <Card>
+                  <Card.Body>
+                    <Form.Group controlId="formGroupDeviceName">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        as="input"
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        defaultValue={this.state.device.name}
+                        onChange={this.onControlChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formGroupDeviceLocation">
+                      <Form.Label>Location</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="location"
+                        defaultValue={this.state.device.location}
+                        onChange={this.onControlChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formGroupDeviceMfg">
+                      <Form.Label>Manufacturer</Form.Label>
+                      <DropdownButton id="device-mfg" title={this.state.device.mfg}>
+                        <Dropdown.Item name="x10" onClick={this.onDeviceMfgClick}>x10</Dropdown.Item>
+                        <Dropdown.Item name="tplink" onClick={this.onDeviceMfgClick}>tplink</Dropdown.Item>
+                        <Dropdown.Item name="meross" onClick={this.onDeviceMfgClick}>meross</Dropdown.Item>
+                      </DropdownButton>
+                    </Form.Group>
 
-            {this.generateAddressControl()}
-            {this.generateChannelControl()}
-            {this.generateColorAndBrightness()}
+                    {this.generateAddressControl()}
+                    {this.generateChannelControl()}
+                  </Card.Body>
+                </Card>
+              </Col>
 
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
-              Save
-            </Button>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
-              Cancel
-            </Button>
+              {this.generateColorAndBrightness()}
+
+            </Row>
+
+            <Row>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
+                Save
+              </Button>
+              <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
+                Cancel
+              </Button>
+            </Row>
+
           </Form>
           {this.renderDialogBox()}
         </>
