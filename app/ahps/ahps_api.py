@@ -316,14 +316,18 @@ class AHPSRequest:
         return response
 
 
-    def update_device(self, device_id, device_name, device_location, device_mfg, device_address, device_channel):
+    def update_device(self, device_id, device_name, device_location, device_mfg, device_address,
+                      device_channel, device_color, device_brightness):
         """
         Update an existing device
         :param device_id:
         :param device_name:
         :param device_location:
-        :param device_type:
+        :param device_mfg:
         :param device_address:
+        :param device_channel:
+        :param device_color:
+        :param device_brightness:
         :return:
         """
         req = AHPSRequest.create_request("UpdateDevice")
@@ -333,6 +337,9 @@ class AHPSRequest:
         req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
         req["args"]["device-channel"] = device_channel
+        req["args"]["device-color"] = device_color
+        req["args"]["device-brightness"] = device_brightness
+
         response = self.send_command(req)
         return response
 

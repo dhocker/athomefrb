@@ -115,8 +115,8 @@ def create_new_program():
     program["randomize"] = normalize_boolean(request.form["randomize"])
     program["randomize-amount"] = request.form['randomizeamount']
     program["command"] = request.form['command']
-    program["dimamount"] = request.form['dimamount']
-    program["args"] = request.form['args']
+    program["color"] = request.form['color']
+    program["brightness"] = request.form['brightness']
 
     api_req = AHPSRequest()
     res = api_req.define_device_program(program)
@@ -288,12 +288,11 @@ def save_device_program(id):
     program["randomize"] = normalize_boolean(request.form["randomize"])
     program["randomize-amount"] = request.form['randomizeamount']
     program["command"] = request.form['command']
-    program["dimamount"] = request.form['dimamount']
-    program["args"] = request.form['args']
+    program["color"] = request.form['color']
+    program["brightness"] = request.form['brightness']
 
     api_req = AHPSRequest()
 
-    # TODO Implement update device program API
     r = api_req.update_device_program(program)
     if r:
         logger.debug("Update device program: %s", json.dumps(program, indent=4))
@@ -358,13 +357,13 @@ def save_device(id):
     location = request.form['location']
     device_mfg = request.form['mfg']
     address = request.form['address']
-    channel = 0
-    if "channel" in request.form.keys():
-        channel = int(request.form["channel"])
+    channel = int(request.form["channel"])
+    color = request.form["color"]
+    brightness = request.form["brightness"]
 
     api_req = AHPSRequest()
 
-    r = api_req.update_device(id, name, location, device_mfg, address, channel)
+    r = api_req.update_device(id, name, location, device_mfg, address, channel, color, brightness)
 
     # We are obligated to send a json response
     if r:

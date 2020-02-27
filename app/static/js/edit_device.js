@@ -16,9 +16,10 @@
 */
 
 import React from "react";
-import { Form, Button, Dropdown, DropdownButton } from "react-bootstrap";
+import {Form, Button, Dropdown, DropdownButton} from "react-bootstrap";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
+import {ChromePicker} from "react-color";
 
 
 export class EditDeviceForm extends BaseComponent {
@@ -30,6 +31,7 @@ export class EditDeviceForm extends BaseComponent {
           ...{
             device: {
               mfg: "x10",
+              type: "plug",
               address: "",
               channel: 0,
             },
@@ -53,6 +55,8 @@ export class EditDeviceForm extends BaseComponent {
         this.generateAddressControl = this.generateAddressControl.bind(this);
         this.onDeviceAddressSelect = this.onDeviceAddressSelect.bind(this);
         this.generateChannelControl = this.generateChannelControl.bind(this);
+        this.generateColorAndBrightness = this.generateColorAndBrightness.bind(this);
+        this.onColorChanged = this.onColorChanged.bind(this);
         this.onChannelSelect = this.onChannelSelect.bind(this);
     }
 
@@ -254,7 +258,18 @@ export class EditDeviceForm extends BaseComponent {
 
     onDeviceAddressSelect(key, event) {
       let deviceAddress = key;
-      this.setState({device: {...this.state.device, "address": deviceAddress}});
+      // this.setState({device: {...this.state.device, "address": deviceAddress}});
+      // Update new device address and type
+      this.setState(
+        {device: {
+            ...this.state.device,
+            "address": deviceAddress,
+            "type": this.active_device_list[deviceAddress].type,
+          }
+        }
+      );
+      // this.setState({device: {...this.active_device_list[deviceAddress], "address": deviceAddress}});
+
     }
 
     generateChannelControl() {
@@ -308,9 +323,39 @@ export class EditDeviceForm extends BaseComponent {
       );
     }
 
+    generateColorAndBrightness() {
+      if (this.state.device.type.toLowerCase() !== "bulb") {
+        return "";
+      }
+
+      return (
+        <Form.Group controlId="formGroupColorBrightness">
+          <Form.Label>Color</Form.Label>
+          <ChromePicker
+            color={this.state.device.color}
+            onChangeComplete={this.onColorChanged}
+          />
+
+          <Form.Label>Brightness</Form.Label>
+          <Form.Control
+            as="input"
+            type="text"
+            name="brightness"
+            placeholder="Brightness"
+            value={this.state.device.brightness}
+            onChange={this.onControlChange}
+          />
+        </Form.Group>
+      )
+    }
+
     onChannelSelect(key, event) {
       let deviceChannel = key;
       this.setState({device: {...this.state.device, "channel": deviceChannel}});
+    }
+
+    onColorChanged(new_color) {
+      this.setState({device:{...this.state.device, color: new_color.hex}})
     }
 
     validate(device) {
@@ -403,6 +448,7 @@ export class EditDeviceForm extends BaseComponent {
 
             {this.generateAddressControl()}
             {this.generateChannelControl()}
+            {this.generateColorAndBrightness()}
 
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
               Save

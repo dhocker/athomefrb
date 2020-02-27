@@ -23,6 +23,7 @@ import { BaseComponent } from './base_component';
 import TimePicker from 'react-time-picker';
 // Reference: https://github.com/udivankin/sunrise-sunset
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
+import { ChromePicker } from 'react-color';
 
 export class DeviceProgram extends BaseComponent {
     constructor(props) {
@@ -41,7 +42,8 @@ export class DeviceProgram extends BaseComponent {
               randomizeamount: 0,
               dimamount: 0,
               command: "none",
-              args: "",
+              color: "#FFFFFF",
+              brightness: 100,
             },
             days: [0,0,0,0,0,0,0],
             clocktime: "00:00:00",
@@ -70,6 +72,7 @@ export class DeviceProgram extends BaseComponent {
         this.clockTimeControl = this.clockTimeControl.bind(this);
         this.onRandomizeChanged = this.onRandomizeChanged.bind(this);
         this.onClockChange = this.onClockChange.bind(this);
+        this.onColorChanged = this.onColorChanged.bind(this);
         this.loadForm = this.loadForm.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
@@ -187,6 +190,7 @@ export class DeviceProgram extends BaseComponent {
                 format="hh:mm a"
                 onChange={this.onClockChange}
                 disableClock={true}
+                clearIcon={null}
               />
               </div>
             </Form.Group>
@@ -214,6 +218,43 @@ export class DeviceProgram extends BaseComponent {
         );
       }
       return "";
+    }
+
+    colorAndBrightness() {
+      if (this.state.program.command !== "on") {
+        return "";
+      }
+
+      return (
+        <Col md="auto">
+          <Card>
+            <Card.Header>
+              Color and Brightness
+            </Card.Header>
+            <Card.Body>
+              <Form.Group controlId="formGroupColor">
+                <Form.Label>Color</Form.Label>
+                <ChromePicker
+                  color={this.state.program.color}
+                  onChangeComplete={this.onColorChanged}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formGroupBrightness">
+                <Form.Label>Brightness</Form.Label>
+                <Form.Control
+                  as="input"
+                  type="text"
+                  name="brightness"
+                  placeholder="Brightness"
+                  value={this.state.program.brightness}
+                  onChange={this.onControlChange}
+                />
+              </Form.Group>
+            </Card.Body>
+          </Card>
+        </Col>
+      )
     }
 
     marshalProgram() {
@@ -319,6 +360,10 @@ export class DeviceProgram extends BaseComponent {
           }
         );
       }
+    }
+
+    onColorChanged(new_color) {
+      this.setState({program:{...this.state.program, color: new_color.hex}})
     }
 
     modalClose() {
@@ -492,6 +537,9 @@ export class DeviceProgram extends BaseComponent {
                       </Card.Body>
                     </Card>
                   </Col>
+
+                  {this.colorAndBrightness()}
+
                 </Row>
 
                 <Row>

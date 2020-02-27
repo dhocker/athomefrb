@@ -30,8 +30,11 @@ export class NewDevice extends EditDeviceForm {
               name: "",
               location: "",
               mfg: "x10",
+              type: "plug",
               address: "",
-              channel: 0
+              channel: 0,
+              color: "#FFFFFF",
+              brightness: 100,
             },
             modalShow: false,
             modalTitle: "",
