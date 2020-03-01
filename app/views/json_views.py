@@ -304,6 +304,42 @@ def save_device_program(id):
     return response
 
 
+@app.route('/devices/state', methods=['PUT'])
+def set_all_devices_state():
+    """
+    Change state of all devices to on or off
+    :param roomid:
+    :return:
+    """
+    # NOTE
+    # The jQuery $.ajax call sends arguments as the data property
+    # in the initiating call. The arguments show up in the
+    # request.form property provided by Flask. So,
+    # data: { 'state': new_state } --> request.form['state']
+    arg = request.form['state']
+    api_req = AHPSRequest()
+    if arg == "on":
+        res = api_req.all_devices_on()
+    elif arg == "off":
+        res = api_req.all_devices_off()
+    else:
+        # Return an error
+        res = None
+
+    # We are obligated to send a json response
+    if res:
+        resp = jsonify(res)
+        if res["result-code"]:
+            resp.status_code = 500
+        else:
+            resp.status_code = 200
+        return resp
+
+    response = jsonify(api_req.last_error)
+    response.status_code = 500
+    return response
+
+
 @app.route('/devices/<id>/state', methods=['PUT'])
 def set_devices_state(id):
     """

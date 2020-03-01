@@ -221,35 +221,23 @@ class AHPSRequest:
         return self.send_command(data)
 
 
-    def device_all_units_off(self):
+    def all_devices_off(self):
         """
         Send all units off command
         :param house_code:
         :return:
         """
-        data = AHPSRequest.create_request("AllUnitsOff")
+        data = AHPSRequest.create_request("AllDevicesOff")
 
         return self.send_command(data)
 
 
-    def device_all_lights_on(self):
+    def all_devices_on(self):
         """
         Send all lights on command
         :return:
         """
-        data = AHPSRequest.create_request("AllLightsOn")
-
-        return self.send_command(data)
-
-
-    def device_all_lights_off(self, house_code):
-        """
-        Send all lights off command
-        :param house_code:
-        :return:
-        """
-        data = AHPSRequest.create_request("AllLightsOff")
-        data["args"]["house-code"] = house_code
+        data = AHPSRequest.create_request("AllDevicesOn")
 
         return self.send_command(data)
 

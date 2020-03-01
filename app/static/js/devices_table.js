@@ -30,6 +30,8 @@ export class DevicesTable extends BaseTable {
 
         this.deviceOn = this.deviceOn.bind(this);
         this.deviceOff = this.deviceOff.bind(this);
+        this.allDevicesOn = this.allDevicesOn.bind(this);
+        this.allDevicesOff = this.allDevicesOff.bind(this);
         this.deviceRemove = this.onDeviceRemove.bind(this);
         this.onDialogOK = this.onDialogOK.bind(this);
         this.onDialogCancel = this.onDialogCancel.bind(this);
@@ -63,6 +65,8 @@ export class DevicesTable extends BaseTable {
             <LinkContainer to="/newdevice">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Device</Button>
             </LinkContainer>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-right" onClick={this.allDevicesOff}>All Off</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-right" onClick={this.allDevicesOn}>All On</Button>
           </div>
         );
     }
@@ -89,6 +93,16 @@ export class DevicesTable extends BaseTable {
         okCancelText: `Confirm removal of device id=${rows[row_index].id} name=${rows[row_index].name}`
       });
     };
+
+    // All devices on
+    allDevicesOn() {
+      this.setAllDevicesState("on");
+    }
+
+    // All devices off
+    allDevicesOff() {
+      this.setAllDevicesState("off");
+    }
 
     onDialogOK() {
       const $this = this;
@@ -135,6 +149,26 @@ export class DevicesTable extends BaseTable {
         error: function(xhr, status, msg) {
           const response = JSON.parse(xhr.responseText);
           $this.showDialogBox(`Device ${rows[row_index]["name"]} ${new_state}`, msg, response.message)
+        }
+      });
+    }
+
+    // change all devices state
+    setAllDevicesState(new_state) {
+      const $this = this;
+      const url = `/devices/state`;
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: { 'state': new_state },
+        dataType: "json",
+        success: function(data, status, xhr) {
+          $this.showMessage(`All devices turned ${new_state}`);
+        },
+        error: function(xhr, status, msg) {
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox(`All devices ${new_state}`, msg, response.message)
         }
       });
     }
