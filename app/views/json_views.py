@@ -453,13 +453,13 @@ def define_device():
     location = request.form['location']
     device_mfg = request.form['mfg']
     address = request.form['address']
-    channel = 0
-    if "channel" in request.form.keys():
-        channel = int(request.form["channel"])
+    channel = int(request.form["channel"])
+    color = request.form["color"]
+    brightness = request.form["brightness"]
 
     api_req = AHPSRequest()
 
-    r = api_req.define_device(name, location, device_mfg, address, channel)
+    r = api_req.define_device(name, location, device_mfg, address, channel, color, brightness)
 
     # We are obligated to send a json response
     if r:

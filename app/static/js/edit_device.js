@@ -34,6 +34,8 @@ export class EditDeviceForm extends BaseComponent {
               type: "plug",
               address: "",
               channel: 0,
+              color: "#FFFFFF",
+              brightness: 100,
             },
             tplink_list: [],
             meross_list: [],

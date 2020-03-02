@@ -285,13 +285,17 @@ class AHPSRequest:
         return response
 
 
-    def define_device(self, device_name, device_location, device_mfg, device_address, device_channel):
+    def define_device(self, device_name, device_location, device_mfg,
+                      device_address, device_channel, device_color, device_brightness):
         """
         Define (create) a new device
         :param device_name:
         :param device_location:
-        :param device_type:
+        :param device_mfg:
         :param device_address:
+        :param device_channel
+        :param device_color:
+        :param device_brightness
         :return:
         """
         req = AHPSRequest.create_request("DefineDevice")
@@ -300,6 +304,8 @@ class AHPSRequest:
         req["args"]["device-mfg"] = device_mfg
         req["args"]["device-address"] = device_address
         req["args"]["device-channel"] = device_channel
+        req["args"]["device-color"] = device_color
+        req["args"]["device-brightness"] = device_brightness
         response = self.send_command(req)
         return response
 
