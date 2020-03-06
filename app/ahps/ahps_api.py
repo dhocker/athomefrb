@@ -174,7 +174,6 @@ class AHPSRequest:
         """
         data = AHPSRequest.create_request("On")
         data["args"]["device-id"] = device_id
-        data["args"]["dim-amount"] = dim_amount
 
         return self.send_command(data)
 
@@ -188,7 +187,6 @@ class AHPSRequest:
         """
         data = AHPSRequest.create_request("Off")
         data["args"]["device-id"] = device_id
-        data["args"]["dim-amount"] = dim_amount
 
         return self.send_command(data)
 
