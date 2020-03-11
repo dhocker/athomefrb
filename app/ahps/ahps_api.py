@@ -165,7 +165,7 @@ class AHPSRequest:
         return self.last_response
 
 
-    def device_on(self, device_id, dim_amount):
+    def device_on(self, device_id):
         """
         Send device on command
         :param address:
@@ -178,7 +178,7 @@ class AHPSRequest:
         return self.send_command(data)
 
 
-    def device_off(self, device_id, dim_amount):
+    def device_off(self, device_id):
         """
         Send device off command
         :param address:

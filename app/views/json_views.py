@@ -37,6 +37,7 @@ How to send JSON from Javascript jQuery
 
 from datetime import timedelta, datetime
 import json
+from http import HTTPStatus
 from app import app
 from flask import jsonify, request, make_response
 from app.ahps.ahps_api import AHPSRequest
@@ -52,7 +53,7 @@ logger = logging.getLogger("app")
 @app.route("/version", methods=['GET'])
 def get_app_version():
     response = jsonify(get_version())
-    response.status_code = 200
+    response.status_code = HTTPStatus.OK
     return response
 
 
@@ -63,7 +64,7 @@ def get_devices():
     if res and "devices" in res.keys():
         return jsonify({"data": res["devices"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -75,9 +76,8 @@ def get_available_tplink_devices():
         kv = res["devices"]
         return jsonify({"data": kv})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
-    return ""
 
 
 @app.route("/availabledevices/meross", methods=['GET'])
@@ -88,9 +88,8 @@ def get_available_meross_devices():
         kv = res["devices"]
         return jsonify({"data": kv})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
-    return ""
 
 
 @app.route("/devices/<id>", methods=['GET'])
@@ -100,7 +99,7 @@ def get_device(id):
     if res:
         return jsonify({"data": res["device"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -123,7 +122,7 @@ def create_new_program():
     if res:
         return jsonify(res)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -144,7 +143,7 @@ def get_all_programs():
 
         return jsonify({"data": res["programs"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -164,7 +163,7 @@ def delete_program(id):
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -185,7 +184,7 @@ def get_device_programs(id):
 
         return jsonify({"data": res["programs"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -206,7 +205,7 @@ def get_available_device_programs(id):
 
         return jsonify({"data": res["programs"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -219,7 +218,7 @@ def add_program_to_device(device_id, program_id):
     if r and r["result-code"] == 0:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -238,7 +237,7 @@ def delete_device_program(device_id, program_id):
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -251,7 +250,7 @@ def add_program_to_group_devices(group_id, program_id):
     if r and r["result-code"] == 0:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -268,7 +267,7 @@ def get_device_program(id):
     if res:
         return jsonify({"data": res["program"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -300,7 +299,7 @@ def save_device_program(id):
         # We are obligated to send a json response
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -330,13 +329,13 @@ def set_all_devices_state():
     if res:
         resp = jsonify(res)
         if res["result-code"]:
-            resp.status_code = 500
+            resp.status_code = HTTPStatus.BAD_REQUEST
         else:
-            resp.status_code = 200
+            resp.status_code = HTTPStatus.OK
         return resp
 
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -355,9 +354,9 @@ def set_devices_state(id):
     arg = request.form['state']
     api_req = AHPSRequest()
     if arg == "on":
-        res = api_req.device_on(id, 0)
+        res = api_req.device_on(id)
     elif arg == "off":
-        res = api_req.device_off(id, 0)
+        res = api_req.device_off(id)
     else:
         # Return an error
         res = None
@@ -366,13 +365,13 @@ def set_devices_state(id):
     if res:
         resp = jsonify(res)
         if res["result-code"]:
-            resp.status_code = 500
+            resp.status_code = HTTPStatus.BAD_REQUEST
         else:
-            resp.status_code = 200
+            resp.status_code = HTTPStatus.OK
         return resp
 
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -405,7 +404,7 @@ def save_device(id):
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -426,14 +425,14 @@ def save_all_devices():
                                   device["address"])
         if not r:
             response = jsonify(api_req.last_error)
-            response.status_code = 500
+            response.status_code = HTTPStatus.BAD_REQUEST
             return response
 
     # We are obligated to send a json response
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -465,7 +464,7 @@ def define_device():
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -485,7 +484,7 @@ def delete_device(id):
     if r:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -496,7 +495,7 @@ def get_action_groups():
     if res and "groups" in res.keys():
         return jsonify({"data": res["groups"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -521,7 +520,7 @@ def define_action_group():
     if r and r["result-code"] == 0:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -532,7 +531,7 @@ def delete_action_group(group_id):
     if res:
         return jsonify(res)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -543,7 +542,7 @@ def get_action_group(group_id):
     if res and "group" in res.keys():
         return jsonify({"data": res["group"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -568,7 +567,7 @@ def save_action_group(id):
         # We are obligated to send a json response
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -579,7 +578,7 @@ def get_action_group_devices(group_id):
     if res and "devices" in res.keys():
         return jsonify({"data": res["devices"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -597,7 +596,7 @@ def get_available_group_devices(id):
     if res and "devices" in res.keys():
         return jsonify({"data": res["devices"]})
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -610,7 +609,7 @@ def add_device_to_group(group_id, device_id):
     if r and r["result-code"] == 0:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -640,13 +639,13 @@ def set_groups_state(group_id):
     if res:
         resp = jsonify(res)
         if res["result-code"]:
-            resp.status_code = 500
+            resp.status_code = HTTPStatus.BAD_REQUEST
         else:
-            resp.status_code = 200
+            resp.status_code = HTTPStatus.OK
         return resp
 
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
@@ -666,7 +665,7 @@ def delete_action_group_device(group_id, device_id):
     if r and r["result-code"] == 0:
         return jsonify(r)
     response = jsonify(api_req.last_error)
-    response.status_code = 500
+    response.status_code = HTTPStatus.BAD_REQUEST
     return response
 
 
