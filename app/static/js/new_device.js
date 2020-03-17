@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2020  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 import React from "react";
 import { EditDeviceForm } from "./edit_device";
+import $ from "jquery";
 
 
 export class NewDevice extends EditDeviceForm {
@@ -44,6 +45,7 @@ export class NewDevice extends EditDeviceForm {
         };
 
         this.onSave = this.onSave.bind(this);
+        this.setDeviceState = this.setDeviceState.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
     }
 
@@ -61,6 +63,35 @@ export class NewDevice extends EditDeviceForm {
       else {
         this.createDevice(this.state.device);
       }
+    }
+
+    // change device state
+    setDeviceState(new_state) {
+      const $this = this;
+      const url = `/newdevice/state`;
+      const formData = {
+        'state': new_state,
+        'mfg': this.state.device.mfg,
+        'address': this.state.device.address,
+        'channel': this.state.device.channel,
+        'name': this.state.device.name,
+        'color': this.state.device.color,
+        'brightness': this.state.device.brightness
+      };
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: formData,
+        dataType: "json",
+        success: function(data, status, xhr) {
+          // $this.showMessage(`Device ${rows[row_index]["name"]} turned ${new_state}`);
+        },
+        error: function(xhr, status, msg) {
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox(`Device ${this.state.device.name} ${new_state}`, msg, response.message)
+        }
+      });
     }
 
     generateTitle() {

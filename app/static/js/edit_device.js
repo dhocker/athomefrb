@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2020  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -60,6 +60,8 @@ export class EditDeviceForm extends BaseComponent {
         this.generateColorAndBrightness = this.generateColorAndBrightness.bind(this);
         this.onColorChanged = this.onColorChanged.bind(this);
         this.onChannelSelect = this.onChannelSelect.bind(this);
+        this.deviceOn = this.deviceOn.bind(this);
+        this.deviceOff = this.deviceOff.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -350,11 +352,43 @@ export class EditDeviceForm extends BaseComponent {
                   value={this.state.device.brightness}
                   onChange={this.onControlChange}
                 />
+                <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOn}>Try It!</Button>
+                <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" onClick={this.deviceOff}>Off</Button>
               </Form.Group>
             </Card.Body>
           </Card>
         </Col>
       )
+    }
+
+    // Device on
+    deviceOn(event) {
+      this.setDeviceState("on");
+    };
+
+    // Device off
+    deviceOff(event) {
+      this.setDeviceState("off");
+    };
+
+    // change device state
+    setDeviceState(new_state) {
+      const $this = this;
+      const url = `/devices/${this.state.device.id}/state`;
+
+      $.ajax({
+        method: "PUT",
+        url: url,
+        data: { 'state': new_state, 'color': this.state.device.color, 'brightness': this.state.device.brightness },
+        dataType: "json",
+        success: function(data, status, xhr) {
+          // $this.showMessage(`Device ${rows[row_index]["name"]} turned ${new_state}`);
+        },
+        error: function(xhr, status, msg) {
+          const response = JSON.parse(xhr.responseText);
+          $this.showDialogBox(`Device ${this.state.device.name} ${new_state}`, msg, response.message)
+        }
+      });
     }
 
     onChannelSelect(key, event) {

@@ -1,7 +1,7 @@
 # coding: utf-8
 #
 # AHPS Web - web server for managing an AtHomePowerlineServer instance
-# Copyright © 2014, 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2014, 2020  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -165,15 +165,22 @@ class AHPSRequest:
         return self.last_response
 
 
-    def device_on(self, device_id):
+    def device_on(self, device_id, color=None, brightness=None):
         """
         Send device on command
         :param address:
-        :param dim_amount:
+        :param color:
+        :param brightness:
         :return:
         """
         data = AHPSRequest.create_request("On")
         data["args"]["device-id"] = device_id
+
+        # Optional color and brightness overrides
+        if color is not None:
+            data["args"]["device-color"] = color
+        if brightness is not None:
+            data["args"]["device-brightness"] = brightness
 
         return self.send_command(data)
 
@@ -187,6 +194,39 @@ class AHPSRequest:
         """
         data = AHPSRequest.create_request("Off")
         data["args"]["device-id"] = device_id
+
+        return self.send_command(data)
+
+
+    def new_device_on(self, device_mfg, device_address, device_channel,
+                      device_name, device_color, device_brightness):
+        """
+        Turn a new device on ( a new device is not in the AHPS database)
+        :param device_mfg:
+        :param device_address:
+        :param device_channel:
+        :param device_name:
+        :param device_color:
+        :param device_brightness:
+        :return:
+        """
+        data = AHPSRequest.create_request("On")
+        data["args"]["device-mfg"] = device_mfg
+        data["args"]["device-address"] = device_address
+        data["args"]["device-channel"] = device_channel
+        data["args"]["device-name"] = device_name
+        data["args"]["device-color"] = device_color
+        data["args"]["device-brightness"] = device_brightness
+
+        return self.send_command(data)
+
+
+    def new_device_off(self, device_mfg, device_address, device_channel, device_name):
+        data = AHPSRequest.create_request("Off")
+        data["args"]["device-mfg"] = device_mfg
+        data["args"]["device-address"] = device_address
+        data["args"]["device-channel"] = device_channel
+        data["args"]["device-name"] = device_name
 
         return self.send_command(data)
 

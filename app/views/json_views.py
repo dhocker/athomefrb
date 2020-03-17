@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # AtHome Control
-# Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2019, 2020  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -354,9 +354,59 @@ def set_devices_state(id):
     arg = request.form['state']
     api_req = AHPSRequest()
     if arg == "on":
-        res = api_req.device_on(id)
+        if "color" in request.form.keys():
+            color = request.form['color']
+        else:
+            color = None
+        if "brightness" in request.form.keys():
+            brightness = request.form['brightness']
+        else:
+            brightness = None
+        res = api_req.device_on(id, color=color, brightness=brightness)
     elif arg == "off":
         res = api_req.device_off(id)
+    else:
+        # Return an error
+        res = None
+
+    # We are obligated to send a json response
+    if res:
+        resp = jsonify(res)
+        if res["result-code"]:
+            resp.status_code = HTTPStatus.BAD_REQUEST
+        else:
+            resp.status_code = HTTPStatus.OK
+        return resp
+
+    response = jsonify(api_req.last_error)
+    response.status_code = HTTPStatus.BAD_REQUEST
+    return response
+
+
+@app.route('/newdevice/state', methods=['PUT'])
+def set_new_device_state():
+    """
+    Change state of a new device to on or off
+    :return:
+    """
+    # NOTE
+    # The jQuery $.ajax call sends arguments as the data property
+    # in the initiating call. The arguments show up in the
+    # request.form property provided by Flask. So,
+    # data: { 'state': new_state } --> request.form['state']
+    state = request.form['state']
+    mfg = request.form['mfg']
+    address = request.form['address']
+    channel = request.form['channel']
+    name = request.form['name'] if "name" in request.form.keys() else "new device"
+
+    api_req = AHPSRequest()
+    if state == "on":
+        color = request.form['color'] if "color" in request.form.keys() else ""
+        brightness = request.form['brightness'] if "brightness" in request.form.keys() else 100
+        res = api_req.new_device_on(mfg, address, channel, name, color, brightness)
+    elif state == "off":
+        res = api_req.new_device_off(mfg, address, channel, name)
     else:
         # Return an error
         res = None
