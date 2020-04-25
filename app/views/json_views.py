@@ -126,7 +126,7 @@ def create_new_program():
     return response
 
 
-@app.route("/programs", methods=['GET'])
+@app.route("/programs/all", methods=['GET'])
 def get_all_programs():
     """
     Get all programs

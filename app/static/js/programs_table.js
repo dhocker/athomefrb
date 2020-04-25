@@ -35,7 +35,7 @@ export class ProgramsTable extends BaseTable {
     // This will load the table when the component is mounted
     componentDidMount() {
         // all programs for a device
-        const url = `/programs`;
+        const url = `/programs/all`;
         this.loadTable(url);
     }
 
