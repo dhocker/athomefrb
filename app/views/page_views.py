@@ -25,6 +25,8 @@ from flask import render_template
 #
 
 @app.route("/", methods=['GET'])
+@app.route("/programs", methods=['GET'])
+@app.route("/groups", methods=['GET'])
 def index():
     return render_template('index.html')
 
