@@ -1,5 +1,5 @@
 /*
-    AtHome Control
+    AtHome Control - Edit a device program
     Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
@@ -73,6 +73,8 @@ export class DeviceProgram extends BaseComponent {
         this.onRandomizeChanged = this.onRandomizeChanged.bind(this);
         this.onClockChange = this.onClockChange.bind(this);
         this.onColorChanged = this.onColorChanged.bind(this);
+        this.onSaveAsNew = this.onSaveAsNew.bind(this);
+        this.buttons = this.buttons.bind(this);
         this.loadForm = this.loadForm.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
@@ -257,6 +259,22 @@ export class DeviceProgram extends BaseComponent {
       )
     }
 
+    buttons() {
+      return (
+        <ButtonToolbar>
+          <Button className="btn-sm btn-extra btn-extra-vert" onClick={this.onSave}>
+            Save
+          </Button>
+          <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert mr-5" type="button" onClick={this.onGoBack}>
+            Cancel
+          </Button>
+          <Button className="btn-sm btn-extra btn-extra-vert ml-5" onClick={this.onSaveAsNew}>
+            Save as New
+          </Button>
+        </ButtonToolbar>
+      );
+    }
+
     marshalProgram() {
       // Marshal everything back to a program
       let program = this.state.program;
@@ -277,6 +295,14 @@ export class DeviceProgram extends BaseComponent {
       // PUT program back to server
       const url = `/programs/${this.state.program.id}`;
       this.saveProgram("PUT", url, this.state.program)
+    }
+
+    onSaveAsNew() {
+      // Marshal everything back to a program
+      this.marshalProgram();
+      // POST program back to server
+      const url = "/programs";
+      this.saveProgram("POST", url, this.state.program)
     }
 
     onControlChange(event) {
@@ -544,14 +570,7 @@ export class DeviceProgram extends BaseComponent {
 
                 <Row>
                   <Col>
-                    <ButtonToolbar>
-                      <Button className="btn-extra-vert btn-sm btn-extra btn-extra-vert" onClick={this.onSave}>
-                        Save
-                      </Button>
-                      <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
-                        Cancel
-                      </Button>
-                    </ButtonToolbar>
+                    {this.buttons()}
                   </Col>
                 </Row>
               </Form>

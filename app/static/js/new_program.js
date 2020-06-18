@@ -1,5 +1,5 @@
 /*
-    AtHome Control
+    AtHome Control - Create a new device program
     Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,7 @@
 
 import React from 'react';
 import { DeviceProgram } from './device_program';
+import {Button, ButtonToolbar} from "react-bootstrap";
 
 export class NewProgram extends DeviceProgram {
     constructor(props) {
@@ -24,6 +25,7 @@ export class NewProgram extends DeviceProgram {
 
         this.generateTitle = this.generateTitle.bind(this);
         this.onSave = this.onSave.bind(this);
+        this.buttons = this.buttons.bind(this);
     }
 
     // This will load the table when the component is mounted
@@ -34,6 +36,19 @@ export class NewProgram extends DeviceProgram {
     generateTitle() {
       return (
         <h2>New Program</h2>
+      );
+    }
+
+    buttons() {
+      return (
+        <ButtonToolbar>
+          <Button className="btn-extra-vert btn-sm btn-extra btn-extra-vert" onClick={this.onSave}>
+            Save
+          </Button>
+          <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
+            Cancel
+          </Button>
+        </ButtonToolbar>
       );
     }
 
