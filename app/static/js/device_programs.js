@@ -87,7 +87,7 @@ export class DeviceProgramsTable extends BaseTable {
             <LinkContainer to={"/availableprograms/device/" + String(params.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Programs</Button>
             </LinkContainer>
-            <LinkContainer to={"/device/" + String(params.id) + "/newprogram"}>
+            <LinkContainer to="/device/newprogram">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Program</Button>
             </LinkContainer>
           </div>
