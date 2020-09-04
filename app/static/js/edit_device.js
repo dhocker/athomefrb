@@ -78,25 +78,28 @@ export class EditDeviceForm extends BaseComponent {
           url: url,
           success: function (response /* , status */) {
               $this.setState({device: response.data});
+              // Load list of available devices (or more generally WiFi devices)
+              $this.loadDeviceLists(response.data.mfg);
           },
           error: function(jqxhr, status, msg) {
             const response = JSON.parse(jqxhr.responseText);
             $this.showMessage(`${status}, ${msg}, ${response.message}`);
           }
         });
-
-        // TODO Load list of available TPLink devices (or more generally WiFi devices)
-        $this.loadDeviceLists();
     }
 
-    loadDeviceLists() {
-        // Load list of available TPLink devices
+    loadDeviceLists(mfg) {
+        // Load list of available devices
+        // The active device type is "mfg"
         const $this = this;
         let url = `/availabledevices/tplink`;
         $.ajax({
           url: url,
           success: function (response /* , status */) {
               $this.setState({tplink_list: response.data});
+              if (mfg === "tplink") {
+                $this.active_device_list = response.data;
+              }
           },
           error: function(jqxhr, status, msg) {
             const response = JSON.parse(jqxhr.responseText);
@@ -110,6 +113,9 @@ export class EditDeviceForm extends BaseComponent {
           url: url,
           success: function (response /* , status */) {
               $this.setState({meross_list: response.data});
+              if (mfg === "meross") {
+                $this.active_device_list = response.data;
+              }
           },
           error: function(jqxhr, status, msg) {
             const response = JSON.parse(jqxhr.responseText);
