@@ -17,7 +17,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap-v5';
 import { BaseTable } from './base_table';
 import { LinkContainer } from 'react-router-bootstrap';
 import $ from 'jquery';
@@ -65,8 +65,8 @@ export class DevicesTable extends BaseTable {
             <LinkContainer to="/newdevice">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Device</Button>
             </LinkContainer>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-right" onClick={this.allDevicesOff}>All Off</Button>
-            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-right" onClick={this.allDevicesOn}>All On</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-end" onClick={this.allDevicesOff}>All Off</Button>
+            <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-end" onClick={this.allDevicesOn}>All On</Button>
           </div>
         );
     }

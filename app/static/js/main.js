@@ -85,9 +85,9 @@ function Main() {
         <Route path="/availableprograms/group/:groupid" component={AvailableGroupProgramsTable} />
       </Switch>
       <footer className="page-footer font-small blue">
-        <div className="container-fluid text-right">
+        <div className="container-fluid text-end">
           <p className="mb-0"><small>At Home Control <VersionComponent/></small></p>
-          <p><small>Copyright &copy; 2014, 2020 by Dave Hocker</small></p>
+          <p><small>Copyright &copy; 2014, 2021 by Dave Hocker</small></p>
         </div>
       </footer>
     </div>

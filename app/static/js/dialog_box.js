@@ -17,8 +17,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap-v5';
+import { Modal } from 'react-bootstrap-v5';
 
 export class DialogBox extends React.Component {
   render() {

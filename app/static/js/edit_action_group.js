@@ -16,7 +16,7 @@
 */
 
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap-v5";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
 

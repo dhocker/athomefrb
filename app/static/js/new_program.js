@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { DeviceProgram } from './device_program';
-import {Button, ButtonToolbar} from "react-bootstrap";
+import {Button, ButtonToolbar} from "react-bootstrap-v5";
 
 export class NewProgram extends DeviceProgram {
     constructor(props) {

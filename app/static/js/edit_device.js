@@ -16,7 +16,7 @@
 */
 
 import React from "react";
-import {Form, Button, Dropdown, DropdownButton, Row, Col, Card} from "react-bootstrap";
+import {Form, Button, Dropdown, DropdownButton, Row, Col, Card} from "react-bootstrap-v5";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
 import {ChromePicker} from "react-color";
@@ -508,14 +508,14 @@ export class EditDeviceForm extends BaseComponent {
 
             </Row>
 
-            <Row>
+            <div className="d-grid gap-2 d-md-block">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onSave}>
                 Save
               </Button>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
                 Cancel
               </Button>
-            </Row>
+            </div>
 
           </Form>
           {this.renderDialogBox()}

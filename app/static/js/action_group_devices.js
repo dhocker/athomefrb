@@ -19,7 +19,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
 
 export class ActionGroupDevices extends BaseTable {

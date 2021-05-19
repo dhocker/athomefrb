@@ -16,13 +16,13 @@
 */
 
 import React from "react";
-import { Nav, Navbar, NavItem, NavbarBrand } from "react-bootstrap";
+import { Nav, Navbar, NavItem } from "react-bootstrap-v5";
 import { LinkContainer, IndexLinkContainer } from "react-router-bootstrap";
 
 function Header() {
   return (
     <header>
-      <Navbar className="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+      <Navbar className="navbar-expand-lg navbar-light bg-light" role="navigation">
         <Nav className="navbar-nav mr-auto">
           <IndexLinkContainer to="/" className="nav-link">
             <NavItem className="nav-item">Devices</NavItem>
@@ -37,12 +37,12 @@ function Header() {
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>
         </Nav>
-        <NavbarBrand className="navbar-brand">
+        <Navbar.Brand className="ms-auto">
           <img src="static/AtHomeBolt.png" alt="AtHomeBolt" className=""/>
           <span className="navbar-text-logo h2">
             At Home Control
           </span>
-        </NavbarBrand>
+        </Navbar.Brand>
       </Navbar>
     </header>
 )};

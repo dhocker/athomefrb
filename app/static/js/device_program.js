@@ -16,7 +16,7 @@
 */
 
 import React from 'react';
-import { Form, Button, Dropdown, DropdownButton, Col, Row, ButtonToolbar, Card } from "react-bootstrap";
+import { Form, Button, Dropdown, DropdownButton, Col, Row, ButtonToolbar, Card } from "react-bootstrap-v5";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
 // Reference: https://github.com/wojtekmaj/react-time-picker

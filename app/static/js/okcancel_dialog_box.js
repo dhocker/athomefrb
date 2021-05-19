@@ -17,8 +17,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap-v5';
+import { Modal } from 'react-bootstrap-v5';
 
 export class OKCancelDialogBox extends React.Component {
   render() {
@@ -29,12 +29,13 @@ export class OKCancelDialogBox extends React.Component {
 
     return (
       <Modal
+        onHide={this.props.onCancel}
         show={this.props.show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton closeLabel="">
           <Modal.Title id="contained-modal-title-vcenter">
             {this.props.title}
           </Modal.Title>
