@@ -34,7 +34,7 @@ export class DialogBox extends React.Component {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton closeLabel="">
           <Modal.Title id="contained-modal-title-vcenter">
             {this.props.title}
           </Modal.Title>
