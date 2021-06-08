@@ -34,7 +34,7 @@ How to send JSON from Javascript jQuery
     }
   });
 """
-
+import time
 from datetime import timedelta, datetime
 import json
 from http import HTTPStatus
@@ -87,6 +87,17 @@ def get_available_meross_devices():
     if res and "devices" in res.keys():
         kv = res["devices"]
         return jsonify({"data": kv})
+    response = jsonify(api_req.last_error)
+    response.status_code = HTTPStatus.BAD_REQUEST
+    return response
+
+
+@app.route("/discoverdevices", methods=['GET'])
+def discover_devices():
+    api_req = AHPSRequest()
+    res = api_req.discover_devices()
+    if res and "result-code" in res.keys() and res["result-code"] == 0:
+        return jsonify({})
     response = jsonify(api_req.last_error)
     response.status_code = HTTPStatus.BAD_REQUEST
     return response

@@ -52,6 +52,7 @@ export class EditDeviceForm extends BaseComponent {
         this.onDeviceMfgClick = this.onDeviceMfgClick.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
         this.onSave = this.onSave.bind(this);
+        this.onDiscoverDevices = this.onDiscoverDevices.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
         this.generateAddressControl = this.generateAddressControl.bind(this);
@@ -174,6 +175,26 @@ export class EditDeviceForm extends BaseComponent {
 
     onGoBack() {
         this.props.history.goBack();
+    }
+
+    onDiscoverDevices() {
+        const $this = this;
+
+        this.showMessage("Discovering devices - this takes a while...");
+
+        let url = `/discoverdevices`;
+        $.ajax({
+          url: url,
+          success: function (response /* , status */) {
+            // Reload the device lists, selecting the current manufacturer
+            $this.loadDeviceLists($this.state.device.mfg);
+            $this.showMessage("Device discovery complete");
+          },
+          error: function(jqxhr, status, msg) {
+            const response = JSON.parse(jqxhr.responseText);
+            $this.showMessage(`${status}, ${msg}, ${response.message}`);
+          }
+        });
     }
 
     modalClose() {
@@ -514,6 +535,9 @@ export class EditDeviceForm extends BaseComponent {
               </Button>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
                 Cancel
+              </Button>
+              <Button className="btn btn-warning btn-sm btn-extra btn-extra-vert float-end" type="button" onClick={this.onDiscoverDevices}>
+                Discover Devices
               </Button>
             </div>
 

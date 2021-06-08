@@ -300,6 +300,16 @@ class AHPSRequest:
         return response
 
 
+    def discover_devices(self):
+        """
+        Discover all devices in local network
+        :return:
+        """
+        req = AHPSRequest.create_request("DiscoverDevices")
+        response = self.send_command(req)
+        return response
+
+
     def get_all_available_devices(self, manufacturer):
         """
         Query for all available devices of a given type
