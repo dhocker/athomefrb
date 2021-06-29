@@ -30,7 +30,7 @@ export class EditDeviceForm extends BaseComponent {
           ...this.state,
           ...{
             device: {
-              mfg: "x10",
+              mfg: "tplink",
               type: "plug",
               address: "",
               channel: 0,
@@ -145,13 +145,10 @@ export class EditDeviceForm extends BaseComponent {
         this.setState({device: {...this.state.device, "mfg": deviceMfg}});
       }
 
-      // Note that mfg is manufacturer (X10, TPLink, Meross)
+      // Note that mfg is manufacturer (TPLink, Meross)
       // and type is Plug or Bulb
       // Choose the active device list based on the mfg type
       switch (deviceMfg) {
-        case "x10":
-          this.active_device_list = [];
-          break;
         case "tplink":
           this.active_device_list = this.state.tplink_list;
           break;
@@ -212,12 +209,10 @@ export class EditDeviceForm extends BaseComponent {
     }
 
     generateAddressControl() {
-      // Note that mfg is manufacturer (X10, TPLink, Meross)
+      // Note that mfg is manufacturer (TPLink, Meross)
       // and type is Plug or Bulb
       switch (this.state.device.mfg) {
-        case "x10":
-          return this.generateX10AddressControl();
-        case "tplink":
+         case "tplink":
           return this.generateDeviceAddressControl(this.state.tplink_list);
         case "meross":
           return this.generateDeviceAddressControl(this.state.meross_list);
@@ -225,21 +220,6 @@ export class EditDeviceForm extends BaseComponent {
       }
 
       return "";
-    }
-
-    generateX10AddressControl() {
-      return (
-        <Form.Group controlId="formGroupDeviceAddress">
-          <Form.Label>House Device Code (A1-G16)</Form.Label>
-          <Form.Control
-            type="text"
-            name="address"
-            defaultValue={this.state.device.address}
-            onChange={this.onControlChange}
-            placeholder="X10 module house-device-code"
-          />
-        </Form.Group>
-      );
     }
 
     generateDeviceAddressControl(device_list) {
@@ -307,14 +287,6 @@ export class EditDeviceForm extends BaseComponent {
       // A device must have been picked
       if (this.state.device.address === "") {
         return "";
-      }
-
-      // Pick the device list for the selected mfg
-      switch (this.state.device.mfg) {
-        case "x10":
-          return "";
-        default:
-          break;
       }
 
       // Device list must be loaded
@@ -436,22 +408,6 @@ export class EditDeviceForm extends BaseComponent {
       }
       const addr = device.address.toLowerCase();
       switch (device.mfg) {
-        case "x10":
-          // An X10 address is A1...A16 through L1...L16 (A-L with 1-16)
-          if (addr.length < 2) {
-            return "Invalid address: must be 2 or 3 characters";
-          }
-          if (addr.substring(0, 1) < 'a' || addr.substring(0, 1) > 'l') {
-            return "Invalid address: First character must be a-l";
-          }
-          if (addr.substring(1, 2) < '1') {
-            return "Invalid address: Must be (A-L)(1-16)";
-          }
-          const dc = parseInt(addr.substring(1), 10);
-          if (isNaN(dc) || dc < 0 || dc > 16) {
-            return "Invalid address: Must be (A-L)(1-16)"
-          }
-          break;
         case "tplink":
           // Address must be an IP address
           if (!/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(addr)) {
@@ -513,7 +469,6 @@ export class EditDeviceForm extends BaseComponent {
                     <Form.Group controlId="formGroupDeviceMfg">
                       <Form.Label>Manufacturer</Form.Label>
                       <DropdownButton id="device-mfg" title={this.state.device.mfg}>
-                        <Dropdown.Item name="x10" onClick={this.onDeviceMfgClick}>x10</Dropdown.Item>
                         <Dropdown.Item name="tplink" onClick={this.onDeviceMfgClick}>tplink</Dropdown.Item>
                         <Dropdown.Item name="meross" onClick={this.onDeviceMfgClick}>meross</Dropdown.Item>
                       </DropdownButton>

@@ -30,7 +30,7 @@ export class NewDevice extends EditDeviceForm {
             device: {
               name: "",
               location: "",
-              mfg: "x10",
+              mfg: "tplink",
               type: "plug",
               address: "",
               channel: 0,
