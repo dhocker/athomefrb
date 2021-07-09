@@ -28,6 +28,10 @@ export class DevicesTable extends BaseTable {
     constructor(props) {
         super(props);
 
+        this.statusTimer = null;
+
+        this.statusUpdate = this.statusUpdate.bind(this);
+        this.unload = this.unload.bind(this);
         this.deviceOn = this.deviceOn.bind(this);
         this.deviceOff = this.deviceOff.bind(this);
         this.allDevicesOn = this.allDevicesOn.bind(this);
@@ -35,6 +39,37 @@ export class DevicesTable extends BaseTable {
         this.deviceRemove = this.onDeviceRemove.bind(this);
         this.onDialogOK = this.onDialogOK.bind(this);
         this.onDialogCancel = this.onDialogCancel.bind(this);
+    }
+
+    // Set up status update timer
+    componentDidMount() {
+      // 10 seconds
+      this.statusTimer = setInterval(this.statusUpdate, this.props.updatetime * 1000);
+      console.log("Status interval timer started");
+      window.addEventListener("beforeunload", this.unload);
+      super.componentDidMount();
+    }
+
+    componentWillUnmount() {
+      clearInterval(this.statusTimer);
+      this.statusTimer = null;
+      console.log("Status interval timer cleared");
+      window.removeEventListener("beforeunload", this.unload);
+      super.componentWillUnmount();
+    }
+
+    // Page unloaded (not caught by componentWillUnmount)
+    unload() {
+      if (this.statusTimer !== null) {
+        clearInterval(this.statusTimer);
+        // console.log("Status interval timer unloaded");
+      }
+    }
+
+    // On/Off status update
+    statusUpdate() {
+      // TODO Implement status update
+      // console.log("Status interval timer pop");
     }
 
     // Override in derived class to provide actions for table row
@@ -74,11 +109,15 @@ export class DevicesTable extends BaseTable {
     // Device on
     deviceOn(row_index, event) {
       this.setDeviceState(row_index, "on");
+      this.state.rows[row_index]["on"] = true;
+      this.setState({rows: this.state.rows})
     };
 
     // Device off
     deviceOff(row_index, event) {
       this.setDeviceState(row_index, "off");
+      this.state.rows[row_index]["on"] = false;
+      this.setState({rows: this.state.rows})
     };
 
     // Remove device
@@ -178,6 +217,7 @@ DevicesTable.propTypes = {
     title: PropTypes.string.isRequired,
     cols: PropTypes.array.isRequired,
     url: PropTypes.string.isRequired,
+    updatetime: PropTypes.number,
 };
 
 // Defines the columns in the devices table
@@ -185,6 +225,7 @@ const deviceTableColumns = [
     { colname: 'location', label: 'Location', type: 'text', sortable: true },
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
     { colname: 'mfg', label: 'Mfg', type: 'text', sortable: true },
+    { colname: 'on', label: 'On', type: 'bool', sortable: true },
     { colname: 'address', label: 'Address/UUID', type: 'longtext', rightlen: 12, sortable: true },
     { colname: 'channel', label: 'Channel', type: 'text', sortable: true },
     { colname: 'id', label: 'ID', type: 'text', sortable: true }
@@ -198,5 +239,6 @@ DevicesTable.defaultProps = {
     title: "All Devices",
     bordered: true,
     striped: true,
-    size: "sm"
+    size: "sm",
+    updatetime: 10,
 };

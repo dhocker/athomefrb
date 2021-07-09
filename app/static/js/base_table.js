@@ -242,6 +242,15 @@ export class BaseTable extends BaseComponent {
                     t = "..." + t.substring(len - colData.rightlen, len);
                   }
                   return (<td key={colData.colname}>{t}</td>);
+                case 'bool':
+                  // true/false
+                  let s = "";
+                  if (row[colData.colname]) {
+                    // A nice green check mark
+                    s = <span className="on-status">&#9989;</span>;
+                  }
+                  // TODO Use styling to get a color indicator
+                  return (<td key={colData.colname}>{s}</td>);
                 default:
                   return (<td key={colData.colname}>{row[colData.colname]} (default)</td>);
               }
