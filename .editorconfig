@@ -11,7 +11,7 @@ insert_final_newline = true
 
 [*.{js,jsx,html,css,json,xml,yml}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # 4 space indentation
 [*.py]
