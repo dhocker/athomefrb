@@ -18,6 +18,7 @@
 import React from "react";
 import {Form, Button, Dropdown, DropdownButton, Row, Col, Card} from "react-bootstrap-v5";
 import $ from 'jquery';
+import { DiscoverDevicesButton } from "./discover_devices_button";
 import { BaseComponent } from './base_component';
 import {ChromePicker} from "react-color";
 
@@ -52,7 +53,9 @@ export class EditDeviceForm extends BaseComponent {
         this.onDeviceMfgClick = this.onDeviceMfgClick.bind(this);
         this.onGoBack = this.onGoBack.bind(this);
         this.onSave = this.onSave.bind(this);
-        this.onDiscoverDevices = this.onDiscoverDevices.bind(this);
+        this.onDiscoverDevicesClick = this.onDiscoverDevicesClick.bind(this);
+        this.onDiscoverDevicesSuccess = this.onDiscoverDevicesSuccess.bind(this);
+        this.onDiscoverDevicesError = this.onDiscoverDevicesError.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.generateTitle = this.generateTitle.bind(this);
         this.generateAddressControl = this.generateAddressControl.bind(this);
@@ -174,25 +177,24 @@ export class EditDeviceForm extends BaseComponent {
         this.props.history.goBack();
     }
 
-    onDiscoverDevices() {
+    onDiscoverDevicesClick() {
         const $this = this;
 
-        this.showMessage("Discovering devices - this takes a while...");
+        $this.showMessage("Discovering devices - this takes a while...");
+   }
 
-        let url = `/discoverdevices`;
-        $.ajax({
-          url: url,
-          success: function (response /* , status */) {
-            // Reload the device lists, selecting the current manufacturer
-            $this.loadDeviceLists($this.state.device.mfg);
-            $this.showMessage("Device discovery complete");
-          },
-          error: function(jqxhr, status, msg) {
-            const response = JSON.parse(jqxhr.responseText);
-            $this.showMessage(`${status}, ${msg}, ${response.message}`);
-          }
-        });
-    }
+    onDiscoverDevicesSuccess(response) {
+        const $this = this;
+
+        $this.loadDeviceLists($this.state.device.mfg);
+        $this.showMessage("Discovering devices completed");
+   }
+
+    onDiscoverDevicesError(response) {
+        const $this = this;
+
+        $this.showMessage("Discovering devices failed: " + response.message);
+   }
 
     modalClose() {
       // When the saved confirmation is dismissed, go back to the previous URI
@@ -491,9 +493,15 @@ export class EditDeviceForm extends BaseComponent {
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert" type="button" onClick={this.onGoBack}>
                 Cancel
               </Button>
-              <Button className="btn btn-warning btn-sm btn-extra btn-extra-vert float-end" type="button" onClick={this.onDiscoverDevices}>
+              <DiscoverDevicesButton
+                    className="btn btn-warning btn-sm btn-extra btn-extra-vert float-end"
+                    label="Discover Devices"
+                    onSuccess={this.onDiscoverDevicesSuccess}
+                    onError={this.onDiscoverDevicesError}
+                    onClick={this.onDiscoverDevicesClick}
+              >
                 Discover Devices
-              </Button>
+              </DiscoverDevicesButton>
             </div>
 
           </Form>

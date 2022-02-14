@@ -21,6 +21,7 @@ import { Button } from 'react-bootstrap-v5';
 import { BaseTable } from './base_table';
 import { LinkContainer } from 'react-router-bootstrap';
 import $ from 'jquery';
+import { DiscoverDevicesButton } from './discover_devices_button';
 // import {  Route, Switch } from "react-router-dom";
 
 
@@ -39,6 +40,9 @@ export class DevicesTable extends BaseTable {
         this.deviceRemove = this.onDeviceRemove.bind(this);
         this.onDialogOK = this.onDialogOK.bind(this);
         this.onDialogCancel = this.onDialogCancel.bind(this);
+        this.onDiscoverDevicesClick = this.onDiscoverDevicesClick.bind(this);
+        this.onDiscoverDevicesSuccess = this.onDiscoverDevicesSuccess.bind(this);
+        this.onDiscoverDevicesError = this.onDiscoverDevicesError.bind(this);
     }
 
     // Set up status update timer
@@ -100,6 +104,13 @@ export class DevicesTable extends BaseTable {
             <LinkContainer to="/newdevice">
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">New Device</Button>
             </LinkContainer>
+            <DiscoverDevicesButton
+                className="btn btn-warning btn-sm btn-extra btn-extra-vert float-end"
+                label="Rediscover Devices"
+                onClick={this.onDiscoverDevicesClick}
+                onSuccess={this.onDiscoverDevicesSuccess}
+                onError={this.onDiscoverDevicesError}
+            />
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-end" onClick={this.allDevicesOff}>All Off</Button>
             <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert float-end" onClick={this.allDevicesOn}>All On</Button>
           </div>
@@ -132,6 +143,24 @@ export class DevicesTable extends BaseTable {
         okCancelText: `Confirm removal of device id=${rows[row_index].id} name=${rows[row_index].name}`
       });
     };
+
+    onDiscoverDevicesClick() {
+        const $this = this;
+
+        $this.showMessage("Discovering devices - this takes a while...");
+   }
+
+    onDiscoverDevicesSuccess(response) {
+        const $this = this;
+
+        $this.showMessage("Discovering devices completed");
+   }
+
+    onDiscoverDevicesError(response) {
+        const $this = this;
+
+        $this.showMessage("Discovering devices failed: " + response.message);
+   }
 
     // All devices on
     allDevicesOn() {
