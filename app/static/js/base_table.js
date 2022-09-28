@@ -237,8 +237,8 @@ export class BaseTable extends BaseComponent {
                   // Mostly used for device address
                   let t = row[colData.colname];
                   const len = t.length;
-                  // 15 is chosen because it is the max length of an IP address
-                  if (len > 15) {
+                  // 17 is chosen because it is the max length of mac address
+                  if (len > 17) {
                     t = "..." + t.substring(len - colData.rightlen, len);
                   }
                   return (<td key={colData.colname}>{t}</td>);

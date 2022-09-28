@@ -411,9 +411,10 @@ export class EditDeviceForm extends BaseComponent {
       const addr = device.address.toLowerCase();
       switch (device.mfg) {
         case "tplink":
-          // Address must be an IP address
-          if (!/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(addr)) {
-            return "Invalid IP address";
+          // Address must be a device ID (mac address)
+          // See https://stackoverflow.com/questions/29228769/mac-address-regex-for-javascript
+          if (!/^[0-9a-f]{1,2}([:-])(?:[0-9a-f]{1,2}\1){4}[0-9a-f]{1,2}$/.test(addr) && addr.length !== 17) {
+            return "Invalid device ID";
           }
           if (device.channel >= device.channels) {
             return "Channel is out of range"

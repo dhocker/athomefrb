@@ -255,7 +255,7 @@ const deviceTableColumns = [
     { colname: 'name', label: 'Name', type: 'text', sortable: true },
     { colname: 'mfg', label: 'Mfg', type: 'text', sortable: true },
     { colname: 'on', label: 'On', type: 'bool', sortable: true },
-    { colname: 'address', label: 'Address/UUID', type: 'longtext', rightlen: 12, sortable: true },
+    { colname: 'address', label: 'Address/UUID', type: 'longtext', rightlen: 17, sortable: true },
     { colname: 'channel', label: 'Channel', type: 'text', sortable: true },
     { colname: 'id', label: 'ID', type: 'text', sortable: true }
 ];
