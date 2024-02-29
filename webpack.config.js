@@ -28,13 +28,13 @@ module.exports = {
                 test: /\.jsx?$/,
                 include: __dirname + '/app/static/js',
                 use: [
-                    { loader: 'babel-loader'}
+                    {loader: 'babel-loader'}
                 ]
             },
             {
                 test: /\.(js|jsx)$/,
                 use: [
-                    { loader: 'babel-loader'},
+                    {loader: 'babel-loader'},
                     {
                         loader: "eslint-loader",
                         options: {
@@ -47,26 +47,37 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    { loader: 'style-loader' },
-                    { loader: 'css-loader'}
+                    {loader: 'style-loader'},
+                    {loader: 'css-loader'}
                 ]
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    "style-loader",
+                    // Translates CSS into CommonJS
+                    "css-loader",
+                    // Compiles Sass to CSS
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
                 use: [
-                    { loader: 'file' }
+                    {loader: 'file'}
                 ]
             },
             {
                 test: /\.(woff|woff2)$/,
                 use: [
-                    { loader: 'url?prefix=font/&limit=5000' }
+                    {loader: 'url?prefix=font/&limit=5000'}
                 ]
             },
             {
                 test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
                 use: [
-                    { loader: 'url?limit=10000&mimetype=application/octet-stream' }
+                    {loader: 'url?limit=10000&mimetype=application/octet-stream'}
                 ]
             },
             {
@@ -76,19 +87,19 @@ module.exports = {
             {
                 test: /\.gif/,
                 use: [
-                    { loader: 'url-loader?limit=10000&mimetype=image/gif' }
+                    {loader: 'url-loader?limit=10000&mimetype=image/gif'}
                 ]
             },
             {
                 test: /\.jpg/,
                 use: [
-                    { loader: 'url-loader?limit=10000&mimetype=image/jpg' }
+                    {loader: 'url-loader?limit=10000&mimetype=image/jpg'}
                 ]
             },
             {
                 test: /\.png/,
                 use: [
-                    { loader: 'url-loader?limit=10000&mimetype=image/png' }
+                    {loader: 'url-loader?limit=10000&mimetype=image/png'}
                 ]
             }
         ]
@@ -99,11 +110,11 @@ module.exports = {
         libraryTarget: 'var',
         library: 'EntryPoint'
     },
-	resolve: {
-		extensions: ['.js', '.jsx']
-	},
-	devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
-	plugins: [
-		new webpack.NoEmitOnErrorsPlugin()
-	]
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
+    devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
+    plugins: [
+        new webpack.NoEmitOnErrorsPlugin()
+    ]
 };

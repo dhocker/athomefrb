@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -8,6 +8,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
     See the LICENSE file for more details.
 
@@ -21,8 +22,21 @@ import { BaseTable } from './base_table';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
+import { useParams } from 'react-router-dom';
 
-export class DeviceProgramsTable extends BaseTable {
+// Shell function to field device id URL parameter
+export function DeviceProgramsTable() {
+  const { id } = useParams();
+
+  return (
+    <DeviceProgramsTableClass
+      id={id}
+    >
+    </DeviceProgramsTableClass>
+  );
+}
+
+export class DeviceProgramsTableClass extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -34,14 +48,13 @@ export class DeviceProgramsTable extends BaseTable {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        const { match: { params } } = this.props;
         // all programs for a device
-        const url = `/devices/${params.id}/programs`;
+        const url = `/devices/${this.props.id}/programs`;
         this.setState({
-          title: `${this.props.title} for Device ID ${params.id}`
+          title: `${this.props.title} for Device ID ${this.props.id}`
         });
         this.loadTable(url);
-        this.getDeviceInfo(params.id);
+        this.getDeviceInfo(this.props.id);
     }
 
     getDeviceInfo(device_id) {
@@ -81,10 +94,9 @@ export class DeviceProgramsTable extends BaseTable {
     globalActions() {
         // Use Link or button depending on required action
         // This still doesn't work right
-        const { match: { params } } = this.props;
         return (
           <div>
-            <LinkContainer to={"/availableprograms/device/" + String(params.id)}>
+            <LinkContainer to={"/availableprograms/device/" + String(this.props.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Programs</Button>
             </LinkContainer>
             <LinkContainer to="/device/newprogram">
@@ -111,8 +123,7 @@ export class DeviceProgramsTable extends BaseTable {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
-      const { match: { params } } = this.props;
-      const url = `/devices/${params.id}/programs/${rows[row_index].id}`;
+      const url = `/devices/${this.props.id}/programs/${rows[row_index].id}`;
 
       $.ajax({
         method: "DELETE",
@@ -122,7 +133,7 @@ export class DeviceProgramsTable extends BaseTable {
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
           // Reload the programs for the current device
-          const url = `/devices/${params.id}/programs`;
+          const url = `/devices/${$this.props.id}/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {
@@ -138,7 +149,7 @@ export class DeviceProgramsTable extends BaseTable {
     }
 }
 
-DeviceProgramsTable.propTypes = {
+DeviceProgramsTableClass.propTypes = {
     class: PropTypes.string.isRequired,
 };
 
@@ -150,7 +161,7 @@ const programTableColumns = [
 ];
 
 // Defaults for a standard device programs table
-DeviceProgramsTable.defaultProps = {
+DeviceProgramsTableClass.defaultProps = {
     cols: programTableColumns,
     default_sort_column: 0,
     title: "Programs",

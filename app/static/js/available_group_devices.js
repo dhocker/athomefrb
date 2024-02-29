@@ -20,8 +20,23 @@ import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
 import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
+import { useParams, useNavigate } from 'react-router-dom';
 
-export class AvailableGroupDevices extends BaseTable {
+// Shell function to field device id URL parameter
+export function AvailableGroupDevices() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <AvailableGroupDevicesClass
+      id={id}
+      navigate={navigate}
+    >
+    </AvailableGroupDevicesClass>
+  );
+}
+
+export class AvailableGroupDevicesClass extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -37,15 +52,14 @@ export class AvailableGroupDevices extends BaseTable {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        const { match: { params } } = this.props;
         // all programs available for assignment to a device
-        const url = `/availabledevices/group/${params.id}`;
+        const url = `/availabledevices/group/${this.props.id}`;
         this.setState({
-          title: `${this.props.title} for Group ID ${params.id}`,
+          title: `${this.props.title} for Group ID ${this.props.id}`,
           selected: []
         });
         this.loadTable(url);
-        this.getGroupInfo(params.id);
+        this.getGroupInfo(this.props.id);
     }
 
     // We need a custom table loader because we are adding
@@ -134,14 +148,13 @@ export class AvailableGroupDevices extends BaseTable {
 
     addDevicesClosed() {
         // After a successful add we go back to the previous page
-        this.props.history.goBack();
+        this.props.navigate(-1);
     }
 
     addDevice(row) {
-      const { match: { params } } = this.props;
-      // params.id is the group for the device assignment
-      // POST - add row.id device to params.id group
-      const url = `/groupdevices/${params.id}/${row.id}`;
+      // this.props.id is the group for the device assignment
+      // POST - add row.id device to this.props.id group
+      const url = `/groupdevices/${this.props.id}/${row.id}`;
       const $this = this;
 
       return $.ajax({
@@ -190,9 +203,8 @@ export class AvailableGroupDevices extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          const { match: { params } } = $this.props;
           // Reload the programs for the current device
-          const url = `/devices/${params.id}/programs`;
+          const url = `/devices/${this.props.id}/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {
@@ -208,7 +220,7 @@ export class AvailableGroupDevices extends BaseTable {
     }
 }
 
-AvailableGroupDevices.propTypes = {
+AvailableGroupDevicesClass.propTypes = {
     class: PropTypes.string.isRequired,
 };
 
@@ -221,7 +233,7 @@ const programTableColumns = [
 ];
 
 // Defaults for a standard device programs table
-AvailableGroupDevices.defaultProps = {
+AvailableGroupDevicesClass.defaultProps = {
     cols: programTableColumns,
     default_sort_column: 0,
     title: "Available Group Devices",

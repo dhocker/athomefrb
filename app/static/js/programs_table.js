@@ -92,7 +92,7 @@ export class ProgramsTable extends BaseTable {
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
           // Reload all programs
-          const url = `/programs`;
+          const url = `/programs/all`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {

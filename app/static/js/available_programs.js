@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,24 @@ import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
 import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
+import {useNavigate, useParams} from 'react-router-dom';
 
-export class AvailableProgramsTable extends BaseTable {
+// Shell function to field device id URL parameter
+export function AvailableProgramsTable() {
+  const { id } = useParams();
+  // This is used to give the class component a way to "go back"
+  const navigate = useNavigate();
+
+  return (
+    <AvailableProgramsTableClass
+      id={id}
+      navigate={navigate}
+    >
+    </AvailableProgramsTableClass>
+  );
+}
+
+export class AvailableProgramsTableClass extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -37,15 +53,14 @@ export class AvailableProgramsTable extends BaseTable {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        const { match: { params } } = this.props;
         // all programs available for assignment to a device
-        const url = `/availableprograms/device/${params.id}`;
+        const url = `/availableprograms/device/${this.props.id}`;
         this.setState({
-          title: `${this.props.title} for Device ID ${params.id}`,
+          title: `${this.props.title} for Device ID ${this.props.id}`,
           selected: []
         });
         this.loadTable(url);
-        this.getDeviceInfo(params.id);
+        this.getDeviceInfo(this.props.id);
     }
 
     // We need a custom table loader because we are adding
@@ -135,14 +150,13 @@ export class AvailableProgramsTable extends BaseTable {
 
     addProgramsClosed() {
         // After a successful add we go back to the previous page
-        this.props.history.goBack();
+        this.props.navigate(-1);
     }
 
     addProgram(row) {
-      const { match: { params } } = this.props;
-      // params.id is the device for the program assignment
-      // POST - add row.id program to params.id device
-      const url = `/deviceprograms/${params.id}/${row.id}`;
+      // this.props.id is the device for the program assignment
+      // POST - add row.id program to this.props.id device
+      const url = `/deviceprograms/${this.props.id}/${row.id}`;
       const $this = this;
 
       return $.ajax({
@@ -191,9 +205,8 @@ export class AvailableProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          const { match: { params } } = $this.props;
           // Reload the programs for the current device
-          const url = `/devices/${params.id}/programs`;
+          const url = `/devices/${this.props.id}/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {
@@ -209,7 +222,7 @@ export class AvailableProgramsTable extends BaseTable {
     }
 }
 
-AvailableProgramsTable.propTypes = {
+AvailableProgramsTableClass.propTypes = {
     class: PropTypes.string.isRequired,
 };
 
@@ -222,7 +235,7 @@ const programTableColumns = [
 ];
 
 // Defaults for a standard device programs table
-AvailableProgramsTable.defaultProps = {
+AvailableProgramsTableClass.defaultProps = {
     cols: programTableColumns,
     default_sort_column: 0,
     title: "Available Programs",

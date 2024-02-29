@@ -17,22 +17,22 @@
 
 import React from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap-v5";
-import { LinkContainer, IndexLinkContainer } from "react-router-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 function Header() {
   return (
     <header>
       <Navbar className="navbar-expand-lg navbar-light bg-light" role="navigation">
         <Nav className="navbar-nav mr-auto">
-          <IndexLinkContainer to="/" className="nav-link">
+          <LinkContainer to="/" className="nav-link">
             <NavItem className="nav-item">Devices</NavItem>
-          </IndexLinkContainer>
-          <IndexLinkContainer to="/programs" className="nav-link">
+          </LinkContainer>
+          <LinkContainer to="/programs" className="nav-link">
             <NavItem className="nav-item">Programs</NavItem>
-          </IndexLinkContainer>
-          <IndexLinkContainer to="/groups" className="nav-link">
+          </LinkContainer>
+          <LinkContainer to="/groups" className="nav-link">
             <NavItem className="nav-item">Groups</NavItem>
-          </IndexLinkContainer>
+          </LinkContainer>
           <LinkContainer to="/about" className="nav-link">
             <NavItem className="nav-item">About</NavItem>
           </LinkContainer>

@@ -17,10 +17,23 @@
 
 import React from "react";
 import $ from 'jquery';
-import { EditActionGroupForm } from "./edit_action_group";
+import { EditActionGroupFormClass } from "./edit_action_group";
+import { useNavigate } from 'react-router-dom';
+
+export function NewActionGroupForm() {
+  const navigate = useNavigate();
+
+  return (
+    <NewActionGroupFormClass
+      navigate={navigate}
+    >
+    </NewActionGroupFormClass>
+  );
+}
 
 
-export class NewActionGroupForm extends EditActionGroupForm {
+
+export class NewActionGroupFormClass extends EditActionGroupFormClass {
     constructor(props) {
         super(props);
 

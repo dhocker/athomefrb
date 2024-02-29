@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019, 2020  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,9 +21,24 @@ import $ from 'jquery';
 import { DiscoverDevicesButton } from "./discover_devices_button";
 import { BaseComponent } from './base_component';
 import {ChromePicker} from "react-color";
+import { useParams, useNavigate } from 'react-router-dom';
 
+// Shell function to field device id URL parameter
+export function EditDeviceForm() {
+  const { deviceid } = useParams();
+  // This is used to give the class component a way to "go back"
+  const navigate = useNavigate();
 
-export class EditDeviceForm extends BaseComponent {
+  return (
+    <EditDeviceFormClass
+      deviceid={deviceid}
+      navigate={navigate}
+    >
+    </EditDeviceFormClass>
+  );
+}
+
+export class EditDeviceFormClass extends BaseComponent {
     constructor(props) {
         super(props);
 
@@ -70,7 +85,7 @@ export class EditDeviceForm extends BaseComponent {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        this.loadForm(this.props.match.params.deviceid);
+        this.loadForm(this.props.deviceid);
     }
 
     // This can be called to initially load or refresh the form
@@ -174,7 +189,7 @@ export class EditDeviceForm extends BaseComponent {
     }
 
     onGoBack() {
-        this.props.history.goBack();
+        this.props.navigate(-1);
     }
 
     onDiscoverDevicesClick() {
@@ -199,7 +214,7 @@ export class EditDeviceForm extends BaseComponent {
     modalClose() {
       // When the saved confirmation is dismissed, go back to the previous URI
       if (!this.save_error) {
-        this.props.history.goBack();
+        this.props.navigate(-1);
       }
       else {
         this.setState({ modalShow: false });

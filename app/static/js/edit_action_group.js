@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2020  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2020, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,24 @@ import React from "react";
 import { Form, Button } from "react-bootstrap-v5";
 import $ from 'jquery';
 import { BaseComponent } from './base_component';
+import { useParams, useNavigate } from 'react-router-dom';
+
+// Shell function to field device id URL parameter
+export function EditActionGroupForm() {
+  const { groupid } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <EditActionGroupFormClass
+      groupid={groupid}
+      navigate={navigate}
+    >
+    </EditActionGroupFormClass>
+  );
+}
 
 
-export class EditActionGroupForm extends BaseComponent {
+export class EditActionGroupFormClass extends BaseComponent {
     constructor(props) {
         super(props);
 
@@ -48,7 +63,7 @@ export class EditActionGroupForm extends BaseComponent {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        this.loadForm(this.props.match.params.groupid);
+        this.loadForm(this.props.groupid);
     }
 
     // This can be called to initially load or refresh the form
@@ -105,13 +120,13 @@ export class EditActionGroupForm extends BaseComponent {
     }
 
     onGoBack() {
-        this.props.history.goBack();
+        this.props.navigate(-1);
     }
 
     modalClose() {
       // When the saved confirmation is dismissed, go back to the previous URI
       if (!this.save_error) {
-        this.props.history.goBack();
+        this.props.navigate(-1);
       }
       else {
         this.setState({ modalShow: false });
@@ -119,7 +134,7 @@ export class EditActionGroupForm extends BaseComponent {
     }
 
     generateTitle() {
-      return <h2>Edit Group ID {this.props.match.params.groupid}</h2>
+      return <h2>Edit Group ID {this.props.groupid}</h2>
     }
 
     render() {

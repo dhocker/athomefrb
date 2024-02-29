@@ -20,8 +20,21 @@ import PropTypes from 'prop-types';
 import { BaseTable } from './base_table';
 import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
+import { useParams } from 'react-router-dom';
 
-export class AvailableGroupProgramsTable extends BaseTable {
+// Shell function to field group id URL parameter
+export function AvailableGroupProgramsTable() {
+  const { groupid } = useParams();
+
+  return (
+    <AvailableGroupProgramsTableClass
+      deviceid={groupid}
+    >
+    </AvailableGroupProgramsTableClass>
+  );
+}
+
+export class AvailableGroupProgramsTableClass extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -37,14 +50,14 @@ export class AvailableGroupProgramsTable extends BaseTable {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        const { match: { params } } = this.props;
         // all programs available for assignment to a device
         this.setState({
-          title: `${this.props.title} for Group ID ${params.groupid}`,
+          title: `${this.props.title} for Group ID ${this.props.groupid}`,
           selected: []
         });
+        // TODO Is this supposed to be /programs/all
         this.loadTable("/programs");
-        this.getGroupInfo(params.groupid);
+        this.getGroupInfo(this.props.groupid);
     }
 
     // We need a custom table loader because we are adding
@@ -139,10 +152,9 @@ export class AvailableGroupProgramsTable extends BaseTable {
     }
 
     addProgram(row) {
-      const { match: { params } } = this.props;
-      // params.id is the device for the program assignment
-      // POST - add row.id program to params.groupid group devices
-      const url = `/actiongroupprograms/${params.groupid}/${row.id}`;
+      // this.props.id is the device for the program assignment
+      // POST - add row.id program to this.props.groupid group devices
+      const url = `/actiongroupprograms/${this.props.groupid}/${row.id}`;
       const $this = this;
 
       return $.ajax({
@@ -187,9 +199,8 @@ export class AvailableGroupProgramsTable extends BaseTable {
         dataType: "json",
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
-          const { match: { params } } = $this.props;
           // Reload the programs for the current device
-          const url = `/devices/${params.id}/programs`;
+          const url = `/devices/${$this.props.groupid}/programs`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {

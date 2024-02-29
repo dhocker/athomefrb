@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,8 +21,21 @@ import { BaseTable } from './base_table';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Button } from 'react-bootstrap-v5';
 import $ from 'jquery';
+import { useParams } from 'react-router-dom';
 
-export class ActionGroupDevices extends BaseTable {
+// Shell function to field group id URL parameter
+export function ActionGroupDevices() {
+  const { id } = useParams();
+
+  return (
+    <ActionGroupDevicesClass
+      id={id}
+    >
+    </ActionGroupDevicesClass>
+  );
+}
+
+export class ActionGroupDevicesClass extends BaseTable {
     constructor(props) {
         super(props);
 
@@ -34,14 +47,13 @@ export class ActionGroupDevices extends BaseTable {
 
     // This will load the table when the component is mounted
     componentDidMount() {
-        const { match: { params } } = this.props;
         // all devices in a group
-        const url = `/actiongroups/${params.id}/devices`;
+        const url = `/actiongroups/${this.props.id}/devices`;
         this.setState({
-          title: `${this.props.title} for Action Group ID ${params.id}`
+          title: `${this.props.title} for Action Group ID ${this.props.id}`
         });
         this.loadTable(url);
-        this.getGroupInfo(params.id);
+        this.getGroupInfo(this.props.id);
     }
 
     getGroupInfo(group_id) {
@@ -81,13 +93,12 @@ export class ActionGroupDevices extends BaseTable {
     globalActions() {
         // Use Link or button depending on required action
         // This still doesn't work right
-        const { match: { params } } = this.props;
         return (
           <div>
-            <LinkContainer to={"/availabledevices/group/" + String(params.id)}>
+            <LinkContainer to={"/availabledevices/group/" + String(this.props.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Devices to Group</Button>
             </LinkContainer>
-            <LinkContainer to={"/availableprograms/group/" + String(params.id)}>
+            <LinkContainer to={"/availableprograms/group/" + String(this.props.id)}>
               <Button className="btn btn-primary btn-sm btn-extra btn-extra-vert">Add Programs to Group Devices</Button>
             </LinkContainer>
           </div>
@@ -142,8 +153,7 @@ export class ActionGroupDevices extends BaseTable {
       const $this = this;
       const rows = this.state.rows;
       const row_index = this.remove_row_index;
-      const { match: { params } } = this.props;
-      const url = `/actiongroups/${params.id}/devices/${rows[row_index].id}`;
+      const url = `/actiongroups/${this.props.id}/devices/${rows[row_index].id}`;
 
       $.ajax({
         method: "DELETE",
@@ -153,7 +163,7 @@ export class ActionGroupDevices extends BaseTable {
         success: function(data, status, xhr) {
           $this.showMessage(`Program ${rows[row_index]["name"]} removed`);
           // Reload the programs for the current device
-          const url = `/actiongroups/${params.id}/devices`;
+          const url = `/actiongroups/${this.props.id}/devices`;
           $this.loadTable(url);
         },
         error: function(xhr, status, msg) {
@@ -169,7 +179,7 @@ export class ActionGroupDevices extends BaseTable {
     }
 }
 
-ActionGroupDevices.propTypes = {
+ActionGroupDevicesClass.propTypes = {
     class: PropTypes.string.isRequired,
 };
 
@@ -181,7 +191,7 @@ const deviceTableColumns = [
 ];
 
 // Defaults for a standard device programs table
-ActionGroupDevices.defaultProps = {
+ActionGroupDevicesClass.defaultProps = {
     cols: deviceTableColumns,
     default_sort_column: 0,
     title: "Devices",

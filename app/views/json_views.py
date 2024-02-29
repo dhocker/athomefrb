@@ -45,6 +45,8 @@ from app.ahps.sun_data import get_astral_data
 from configuration import Configuration
 from Version import get_version
 import logging
+import os
+from pathlib import Path
 
 
 logger = logging.getLogger("app")
@@ -740,6 +742,20 @@ def get_location():
         "latitude": Configuration.Latitude(),
         "longitude": Configuration.Longitude()
     }
+    return jsonify(resp)
+
+
+@app.route("/markdown/<fn>", methods=["GET"])
+def get_markdown_file(fn):
+    mdtext = ""
+    static_folder = Path(os.getcwd())
+    file_path = static_folder / (fn + ".md")
+    logger.debug("Get markdown file: %s", file_path)
+    with open(file_path, "r") as mdfh:
+        mdtext = mdfh.read()
+
+    # We return JSON format just to be consistent
+    resp = {"markdown": mdtext}
     return jsonify(resp)
 
 

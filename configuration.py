@@ -40,6 +40,7 @@
 import os
 import json
 import logging
+import zoneinfo
 
 logger = logging.getLogger("app")
 
@@ -108,13 +109,13 @@ class Configuration():
 
     ######################################################################
     @classmethod
-    def get_config_var(cls, var_name):
+    def get_config_var(cls, var_name, default_value=None):
         try:
             return cls.ActiveConfig[var_name]
         except Exception as ex:
             logger.error("Unable to find configuration variable {0}".format(var_name))
             logger.error(str(ex))
-        return None
+        return default_value
 
     ######################################################################
     @classmethod
@@ -159,7 +160,21 @@ class Configuration():
     ######################################################################
     @classmethod
     def City(cls):
-        return cls.get_config_var("City")
+        return cls.get_config_var("City", default_value="New York")
+
+    ######################################################################
+    @classmethod
+    def State(cls):
+        return cls.get_config_var("State", default_value="NY")
+
+    ######################################################################
+    @classmethod
+    def Timezone(cls):
+        # See ZoneInfo for valid timezone names
+        timezone_name = cls.get_config_var("Timezone", default_value="US/Eastern")
+        if timezone_name not in zoneinfo.available_timezones():
+            logger.error(f"{timezone_name} is not a valid timezone")
+        return timezone_name
 
     ######################################################################
     @classmethod

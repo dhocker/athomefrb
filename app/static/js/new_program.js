@@ -16,10 +16,23 @@
 */
 
 import React from 'react';
-import { DeviceProgram } from './device_program';
+import { DeviceProgramClass } from './device_program';
 import {Button, ButtonToolbar} from "react-bootstrap-v5";
+import { useNavigate } from 'react-router-dom';
 
-export class NewProgram extends DeviceProgram {
+// Shell function to field id URL parameter
+export function NewProgram() {
+  const navigate = useNavigate();
+
+  return (
+    <NewProgramClass
+      navigate={navigate}
+    >
+    </NewProgramClass>
+  );
+}
+
+export class NewProgramClass extends DeviceProgramClass {
     constructor(props) {
         super(props);
 

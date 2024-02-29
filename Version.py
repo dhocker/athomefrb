@@ -1,7 +1,7 @@
 # coding=utf-8
 #
 # Susanna's Library - for tracking authors and books
-# Copyright © 2016, 2018  Dave Hocker (email: AtHomeX10@gmail.com)
+# Copyright © 2016, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@ def GetVersion():
   """
   Returns the current app version
   """
-  return "2022.10.5.0"
+  return "2024.2.0.1"
 
 
 @app.context_processor
 def get_version():
     '''
-    Exposes the variable version to jinga2 teplate renderer.
+    Exposes the variable version to jinga2 template renderer.
     :return:
     '''
     return dict(version = GetVersion())

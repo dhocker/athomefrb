@@ -1,0 +1,26 @@
+/*
+    Custom styling for the Markdown component
+    See: https://github.com/sindresorhus/github-markdown-css
+*/
+
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+/*
+The default color for code is a red. This is not a questionable choice
+as about 15% of the male population is red-green color blind.
+ */
+.markdown-body code {
+    color: black;
+}
+
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}

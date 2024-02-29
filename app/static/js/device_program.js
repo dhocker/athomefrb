@@ -1,6 +1,6 @@
 /*
     AtHome Control - Edit a device program
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,8 +24,23 @@ import TimePicker from 'react-time-picker';
 // Reference: https://github.com/udivankin/sunrise-sunset
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
 import { ChromePicker } from 'react-color';
+import { useParams, useNavigate } from 'react-router-dom';
 
-export class DeviceProgram extends BaseComponent {
+// Shell function to field id URL parameter
+export function DeviceProgram() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <DeviceProgramClass
+      id={id}
+      navigate={navigate}
+    >
+    </DeviceProgramClass>
+  );
+}
+
+export class DeviceProgramClass extends BaseComponent {
     constructor(props) {
         super(props);
 
@@ -83,7 +98,7 @@ export class DeviceProgram extends BaseComponent {
     // This will load the table when the component is mounted
     componentDidMount() {
         this.getSunriseSunset();
-        this.loadForm(this.props.match.params.id);
+        this.loadForm(this.props.id);
     }
 
     // This can be called to initially load or refresh the form
@@ -99,34 +114,33 @@ export class DeviceProgram extends BaseComponent {
               days: $this.daymaskToDays(response.data.daymask),
               clocktime: ct,
             });
-            $this.calculate_effective_time(parseInt(response.data.offset));
+            $this.calculate_effective_time(response.data.triggermethod, parseInt(response.data.offset));
         });
     }
 
     // Get sunrise/sunset for the configured location
     getSunriseSunset() {
-        const $this = this;
+       const $this = this;
         const url = '/location';
         $.get(url, function (response /* , status */) {
           const latitude = parseFloat(response.latitude);
           const longitude = parseFloat(response.longitude);
           $this.sunrise = getSunrise(latitude, longitude);
           $this.sunset = getSunset(latitude, longitude);
-          // Calc effective time
-          $this.calculate_effective_time($this.state.program.offset);
         });
     }
 
-    calculate_effective_time(offset) {
+    calculate_effective_time(trigger_method, offset) {
+        // This method cannot depend on state values
         // This is an on-demand calculation because it is extremely
         // difficult to control the React state offset variable.
-        if (this.state.program.triggermethod === "sunset") {
+        if (trigger_method === "sunset") {
             const sunset_offset = new Date(this.sunset.getTime() + offset * 60 * 1000);
             this.setState({
               effectivetime: sunset_offset.toLocaleTimeString()
             });
         }
-        else if (this.state.program.triggermethod === "sunrise") {
+        else if (trigger_method === "sunrise") {
             const sunrise_offset = new Date(this.sunrise.getTime() + offset * 60 * 1000);
             this.setState({
               effectivetime: sunrise_offset.toLocaleTimeString()
@@ -139,7 +153,7 @@ export class DeviceProgram extends BaseComponent {
             this.setState({
               effectivetime: ctd.toLocaleTimeString()
             });
-         }
+        }
     }
 
     // Convert a time string hh:mm:ss to a Date instance
@@ -286,7 +300,7 @@ export class DeviceProgram extends BaseComponent {
     }
 
     onGoBack() {
-        this.props.history.goBack();
+        this.props.navigate(-1);
     }
 
     onSave() {
@@ -312,7 +326,7 @@ export class DeviceProgram extends BaseComponent {
         case "offset":
           if (fieldVal !== "-" && fieldVal !== "") {
             fieldVal = parseInt(fieldVal);
-            this.calculate_effective_time(fieldVal);
+            this.calculate_effective_time(this.state.program.triggermethod, fieldVal);
           }
           break;
         case "randomizeamount":
@@ -331,7 +345,7 @@ export class DeviceProgram extends BaseComponent {
       this.setState({program: {...this.state.program, "command": command}},
         function() {
           // After the state is changed...
-          this.calculate_effective_time(this.state.program.offset);
+          this.calculate_effective_time(this.state.program.triggermethod, this.state.program.offset);
         }
       );
     }
@@ -365,7 +379,7 @@ export class DeviceProgram extends BaseComponent {
       this.setState({program: {...this.state.program, "triggermethod": triggerMethod}},
         function() {
           // After the state is changed...
-          this.calculate_effective_time(this.state.program.offset);
+          this.calculate_effective_time(this.state.program.triggermethod, this.state.program.offset);
         }
       );
     }
@@ -382,7 +396,7 @@ export class DeviceProgram extends BaseComponent {
         this.setState({clocktime: newValue},
           function(){
             // After the state is updated...
-            this.calculate_effective_time(this.state.program.offset);
+            this.calculate_effective_time(this.state.program.triggermethod, this.state.program.offset);
           }
         );
       }
@@ -395,7 +409,7 @@ export class DeviceProgram extends BaseComponent {
     modalClose() {
       // When the saved confirmation is dismissed, go back to the previous URI
       if (!this.save_error) {
-        this.props.history.goBack();
+        this.props.navigate(-1);
       }
       else {
         this.setState({ modalShow: false });

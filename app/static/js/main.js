@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 */
 
 import React from "react";
-import {  Route, Switch } from "react-router-dom";
+import {  Route, Routes } from "react-router-dom";
 import { HomePage } from './home_page';
 import { DeviceProgramsTable } from './device_programs';
 import { DeviceProgram } from './device_program';
@@ -32,6 +32,7 @@ import { AvailableGroupProgramsTable} from "./available_group_programs";
 import { About } from './about';
 import { VersionComponent } from './version_component';
 
+// TODO Is this function used?
 export function NotImplemented() {
   let idkey = "";
   let id = "";
@@ -67,27 +68,27 @@ export function NotImplemented() {
 function Main() {
   return (
     <div>
-      <Switch>
-        <Route path="/" exact component={HomePage} />
-        <Route path="/editdevice" component={HomePage} />
-        <Route path="/newdevice" component={HomePage} />
-        <Route path="/programs" exact component={ProgramsTable} />
-        <Route path="/availableprograms/device/:id" component={AvailableProgramsTable} />
-        <Route path="/about/" component={About} />
-        <Route path="/deviceprograms/:id" component={DeviceProgramsTable} />
-        <Route path="/editprogram/:id" component={DeviceProgram} />
-        <Route path="/device/newprogram" component={NewProgram} />
-        <Route path="/groupdevices/:id" component={ActionGroupDevices} />
-        <Route path="/groups" exact component={ActionGroups} />
-        <Route path="/editactiongroup/:groupid" component={EditActionGroupForm} />
-        <Route path="/newactiongroup" exact component={NewActionGroupForm} />
-        <Route path="/availabledevices/group/:id" component={AvailableGroupDevices} />
-        <Route path="/availableprograms/group/:groupid" component={AvailableGroupProgramsTable} />
-      </Switch>
+      <Routes>
+        <Route path="*" exact element={<HomePage />} />
+        <Route path="/editdevice" element={<HomePage />} />
+        <Route path="/newdevice" element={<HomePage />} />
+        <Route path="/programs" exact element={<ProgramsTable />} />
+        <Route path="/availableprograms/device/:id" element={<AvailableProgramsTable />} />
+        <Route path="/about/" element={<About />} />
+        <Route path="/deviceprograms/:id" element={<DeviceProgramsTable />} />
+        <Route path="/editprogram/:id" element={<DeviceProgram />} />
+        <Route path="/device/newprogram" element={<NewProgram />} />
+        <Route path="/groupdevices/:id" element={<ActionGroupDevices />} />
+        <Route path="/groups" exact element={<ActionGroups />} />
+        <Route path="/editactiongroup/:groupid" element={<EditActionGroupForm />} />
+        <Route path="/newactiongroup" exact element={<NewActionGroupForm />} />
+        <Route path="/availabledevices/group/:id" element={<AvailableGroupDevices />} />
+        <Route path="/availableprograms/group/:groupid" element={<AvailableGroupProgramsTable />} />
+      </Routes>
       <footer className="page-footer font-small blue">
         <div className="container-fluid text-end">
           <p className="mb-0"><small>At Home Control <VersionComponent/></small></p>
-          <p><small>Copyright &copy; 2014, 2021 by Dave Hocker</small></p>
+          <p><small>Copyright &copy; 2014, 2024 by Dave Hocker</small></p>
         </div>
       </footer>
     </div>

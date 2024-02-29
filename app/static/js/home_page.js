@@ -1,6 +1,6 @@
 /*
     AtHome Control
-    Copyright © 2019  Dave Hocker (email: AtHomeX10@gmail.com)
+    Copyright © 2019, 2024  Dave Hocker (email: AtHomeX10@gmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 */
 
 import React from "react";
-import {  Route, Switch } from "react-router-dom";
+import {  Route, Routes } from "react-router-dom";
 import { DevicesTable } from './devices_table';
 import { EditDeviceForm } from './edit_device';
 import { NewDevice } from './new_device';
@@ -28,11 +28,11 @@ export class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <Switch>
-          <Route path="/" exact component={DevicesTable} />
-          <Route path="/editdevice/:deviceid" component={EditDeviceForm} />
-          <Route path="/newdevice" exact component={NewDevice} />
-        </Switch>
+        <Routes>
+          <Route path="*" exact element={<DevicesTable />} />
+          <Route path="/editdevice/:deviceid/*" element={<EditDeviceForm />} />
+          <Route path="/newdevice/*" exact element={<NewDevice />} />
+        </Routes>
       </div>
     );
   }
