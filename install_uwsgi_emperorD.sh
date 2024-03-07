@@ -10,7 +10,7 @@ sudo update-rc.d uwsgi-emperorD.sh defaults
 
 # Set up emperor mode for athomefrb
 sudo cp emperor.ini /etc/uwsgi
-sudo cp athomefrb_uwsgi_app3.ini /etc/uswgi/vassals
+sudo cp athomefrb_uwsgi_app3.ini /etc/uwsgi/vassals
 
 # Start the daemon:
 sudo service uwsgi-emperorD.sh start
